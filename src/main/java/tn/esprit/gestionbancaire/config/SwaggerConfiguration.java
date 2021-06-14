@@ -29,7 +29,7 @@ public class SwaggerConfiguration {
         .select()
         .apis(RequestHandlerSelectors.basePackage("tn.esprit.gestionbancaire"))
         .paths(PathSelectors.any())
-        .build();
+        .build(); 
   }
 
 
