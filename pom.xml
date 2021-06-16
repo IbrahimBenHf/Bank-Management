@@ -92,7 +92,7 @@
                         <apiSource>
                             <springmvc>true</springmvc>
                             <locations>
-                                <location>com.bouali.gestiondestock.controller.api</location>
+                                <location>tn.esprit.gestionbancaire.controller.api</location>
                             </locations>
                             <basePath>http://localhost:8081</basePath>
                             <info>
