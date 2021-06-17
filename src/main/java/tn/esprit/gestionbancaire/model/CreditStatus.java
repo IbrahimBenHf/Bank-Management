@@ -1,6 +1,6 @@
 package tn.esprit.gestionbancaire.model;
 
-public enum EtatCredit {
+public enum CreditStatus {
 
     OPEN,
     IN_PROGRESS,

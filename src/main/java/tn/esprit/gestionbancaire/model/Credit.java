@@ -1,7 +1,7 @@
 package tn.esprit.gestionbancaire.model;
-import java.time.Instant;
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -15,12 +15,13 @@ import lombok.NoArgsConstructor;
 @Table(name = "credit")
 public class Credit extends AbstractEntity {
 
-    @Column(name = "codecredit")
-    private String codeCredit;
-
-    @Column(name = "etatcredit")
+    @Column(name = "creditstatus")
     @Enumerated(EnumType.STRING)
-    private EtatCredit etatCredit;
+    private CreditStatus creditStatus;
+
+    @JsonIgnore
+    @Column(name = "archived", nullable = false, columnDefinition = "bit default 0")
+    private boolean archived;
 
 /*
     @Column(name = "etatcredit")
@@ -38,5 +39,9 @@ public class Credit extends AbstractEntity {
     @Column(name = "datecredit")
     private Instant dateCredit;
 */
+
+    public boolean isCreditClosed() {
+        return (CreditStatus.ACCEPTED.equals(this.creditStatus) || CreditStatus.REFUSED.equals(this.creditStatus));
+    }
 }
 

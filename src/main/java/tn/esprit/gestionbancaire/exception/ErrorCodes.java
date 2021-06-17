@@ -6,6 +6,8 @@ public enum ErrorCodes {
     CREDIT_NOT_FOUND(1000),
     CREDIT_NOT_VALID(1001),
     CREDIT_IS_NOT_CLOSED(1002),
+    CREDIT_IS_NULL(1003),
+    CREDIT_NON_MODIFIABLE(1004),
 
     // Liste des exception techniaues
     UPDATE_PHOTO_EXCEPTION(14000),

@@ -5,8 +5,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import tn.esprit.gestionbancaire.controller.api.CreditApi;
 import tn.esprit.gestionbancaire.model.Credit;
-import tn.esprit.gestionbancaire.model.EtatCredit;
+import tn.esprit.gestionbancaire.model.CreditStatus;
 import tn.esprit.gestionbancaire.services.CreditService;
+
+import java.util.List;
+
 
 @RestController
 public class CreditController implements CreditApi {
@@ -20,17 +23,32 @@ public class CreditController implements CreditApi {
         this.creditService = creditService;
     }
     @Override
-    public Credit save(Credit credit) {
-        return creditService.save(credit);
+    public ResponseEntity<Credit> save(Credit credit) {
+        return ResponseEntity.ok(creditService.save(credit));
     }
 
     @Override
-    public Credit updateEtatCredit(Integer idCommande, EtatCredit etatCredit) {
+    public ResponseEntity<Credit> updateCreditStatus(Integer idCredit, CreditStatus creditStatus) {
+        return ResponseEntity.ok(creditService.updateCreditStatus(idCredit, creditStatus));
+    }
+
+    @Override
+    public ResponseEntity<Credit> updateCredit(Integer idCommande) {
         return null;
     }
 
     @Override
-    public Credit updateCredit(Integer idCommande) {
-        return null;
+    public void deleteCredit(Integer idCredit) {
+        creditService.delete(idCredit);
+    }
+
+    @Override
+    public List<Credit> findAllByArchived(Boolean archived) {
+        return  creditService.findAllNotArchived(archived);
+    }
+
+    @Override
+    public List<Credit> findAll() {
+        return creditService.findAll();
     }
 }

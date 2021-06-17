@@ -1,15 +1,15 @@
 package tn.esprit.gestionbancaire.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import tn.esprit.gestionbancaire.model.Credit;
-import tn.esprit.gestionbancaire.model.EtatCredit;
+import tn.esprit.gestionbancaire.model.CreditStatus;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface CreditRepository extends JpaRepository<Credit, Integer> {
 
-    Optional<Credit> findCreditByCodeCredit(String codeCredit);
+    List<Credit> findAllByCreditStatus(CreditStatus creditStatus);
+    List<Credit> findAllByArchived(boolean archived);
 
-    List<Credit> findAllByEtatCredit(EtatCredit etatcredit);
 }
