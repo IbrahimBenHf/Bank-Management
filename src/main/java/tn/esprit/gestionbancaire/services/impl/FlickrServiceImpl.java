@@ -37,7 +37,7 @@ public class FlickrServiceImpl implements FlickrService {
 
   @Override
   @SneakyThrows
-  public String savePhoto(Integer id, InputStream photo, String title) {
+  public String savePhoto(InputStream photo, String title) {
     connect();
     UploadMetaData uploadMetaData = new UploadMetaData();
     uploadMetaData.setTitle(title);

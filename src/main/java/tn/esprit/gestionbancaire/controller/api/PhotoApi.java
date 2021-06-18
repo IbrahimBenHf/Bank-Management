@@ -14,7 +14,7 @@ import static tn.esprit.gestionbancaire.utils.Constants.APP_ROOT;
 @Api("photos")
 public interface PhotoApi {
 
-  @PostMapping( APP_ROOT + "/save/{id}/{title}")
-  String savePhoto(@PathVariable("id") Integer id, @RequestPart("file") MultipartFile photo, @PathVariable("title") String title) throws IOException, FlickrException;
+  @PostMapping( APP_ROOT + "/save/{title}")
+  String savePhoto(@RequestPart("file") MultipartFile photo, @PathVariable("title") String title) throws IOException, FlickrException;
 
 }

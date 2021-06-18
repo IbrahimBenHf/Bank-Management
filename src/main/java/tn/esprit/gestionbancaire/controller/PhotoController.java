@@ -3,6 +3,7 @@ package tn.esprit.gestionbancaire.controller;
 
 import com.flickr4java.flickr.FlickrException;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,7 +23,7 @@ public class PhotoController implements PhotoApi {
   }
 
   @Override
-  public String savePhoto(Integer id, MultipartFile photo, String title) throws IOException, FlickrException {
-    return flickrService.savePhoto(id, photo.getInputStream(), title);
+  public String savePhoto(MultipartFile photo, String title) throws IOException, FlickrException {
+    return flickrService.savePhoto(photo.getInputStream(), title);
   }
 }
