@@ -33,7 +33,7 @@ public class CreditController implements CreditApi {
     }
 
     @Override
-    public ResponseEntity<Credit> updateCredit(Integer idCommande) {
+    public ResponseEntity<Credit> updateCredit(Integer idCredit) {
         return null;
     }
 
