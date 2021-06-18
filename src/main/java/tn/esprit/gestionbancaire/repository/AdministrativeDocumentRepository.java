@@ -10,5 +10,5 @@ public interface AdministrativeDocumentRepository extends JpaRepository<Administ
 
     // JPQL query
     @Query(value = "select ad from AdministrativeDocument ad where ad.credit.id = :id")
-    List<AdministrativeDocument> findAllByUserId(Integer id);
+    List<AdministrativeDocument> findAllByCreditId(Integer id);
 }

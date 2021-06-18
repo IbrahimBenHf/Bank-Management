@@ -23,7 +23,7 @@ public class AdministrativeDocument extends AbstractEntity {
     @Enumerated(EnumType.STRING)
     private AdministrativeDocumentType administrativeDocumentType;
 
-    @ManyToOne(optional = false)
+    @ManyToOne
     @JsonIgnore
     @JoinColumn(name = "idcredit")
     private Credit credit;
