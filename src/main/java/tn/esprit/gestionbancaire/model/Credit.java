@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -22,6 +24,12 @@ public class Credit extends AbstractEntity {
     @JsonIgnore
     @Column(name = "archived", nullable = false, columnDefinition = "bit default 0")
     private boolean archived;
+
+    @OneToMany(mappedBy = "credit", fetch = FetchType.LAZY)
+    private List<AdministrativeDocument> administrativeDocuments;
+
+    @Column(name = "idUser")
+    private int idUser;
 
 /*
     @Column(name = "etatcredit")

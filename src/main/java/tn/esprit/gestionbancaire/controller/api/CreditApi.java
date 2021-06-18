@@ -12,12 +12,13 @@ import tn.esprit.gestionbancaire.model.CreditStatus;
 
 import java.util.List;
 
+import static tn.esprit.gestionbancaire.utils.Constants.APP_ROOT;
 import static tn.esprit.gestionbancaire.utils.Constants.CREDIT;
 
 @Api("credits")
 public interface CreditApi {
 
-    @PostMapping(value = CREDIT + "/create" , consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = APP_ROOT + "/credits/create" , consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "add a credit", notes = "this methode can add new credit", response = Credit.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Credit Object added "),
@@ -25,7 +26,7 @@ public interface CreditApi {
     })
     ResponseEntity<Credit> save(@RequestBody Credit credit);
 
-    @PatchMapping(value = CREDIT + "/update/etat/{idCredit}/{creditStatus}" , consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PatchMapping(value = APP_ROOT + "/credits/update/etat/{idCredit}/{creditStatus}" , consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Modify credit status", notes = "this methode can modify credit status", response = Credit.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Credit status modified "),
@@ -33,7 +34,7 @@ public interface CreditApi {
     })
     ResponseEntity<Credit> updateCreditStatus(@PathVariable("idCredit") Integer idCredit, @PathVariable("creditStatus") CreditStatus creditStatus);
 
-    @PatchMapping(value = CREDIT + "/update/credit/{idCredit}")
+    @PatchMapping(APP_ROOT + "/credits/update/credit/{idCredit}")
     @ApiOperation(value = "Modify credit", notes = "this methode can modify credit", response = Credit.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Credit modified "),
@@ -41,7 +42,7 @@ public interface CreditApi {
     })
     ResponseEntity<Credit> updateCredit(@PathVariable("idCredit") Integer idCredit);
 
-    @DeleteMapping(value = CREDIT + "/delete/credit/{idCredit}")
+    @DeleteMapping(APP_ROOT + "/credits/delete/credit/{idCredit}")
     @ApiOperation(value = "Delete credit", notes = "This methode can delete credit", response = Credit.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Credit deleted "),
@@ -49,14 +50,14 @@ public interface CreditApi {
     })
     void deleteCredit(@PathVariable("idCredit") Integer idCredit);
 
-    @GetMapping(value = CREDIT + "/credits/{archived}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = APP_ROOT + "/credits/{archived}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Get all credits by archive", notes = "This methode get all credits by archive ", responseContainer = "List<Credit>")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "List of credits / Void list")
     })
     List<Credit> findAllByArchived(@PathVariable("archived") Boolean archived);
 
-    @GetMapping(value = CREDIT + "/credits/all", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = APP_ROOT + "/credits/all", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Get all credits", notes = "This methode get all credit ", responseContainer = "List<Credit>")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "List of credits / Void list")
