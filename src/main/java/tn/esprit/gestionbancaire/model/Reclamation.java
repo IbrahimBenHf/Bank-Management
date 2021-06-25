@@ -1,11 +1,18 @@
 package tn.esprit.gestionbancaire.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import tn.esprit.gestionbancaire.enums.ReclamationStatus;
 
 import javax.persistence.*;
-import java.util.Date;
 import java.util.List;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "reclamation")
 public class Reclamation extends AbstractEntity {
@@ -29,4 +36,7 @@ public class Reclamation extends AbstractEntity {
     @OneToMany(mappedBy = "reclamation", fetch = FetchType.LAZY)
     private List<ReclamationComment> reclamationComments;
 
+    public boolean isReclamationClosed() {
+        return (ReclamationStatus.CLOSED.equals(this.status));
+    }
 }

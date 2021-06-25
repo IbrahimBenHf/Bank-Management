@@ -2,9 +2,9 @@ package tn.esprit.gestionbancaire.enums;
 
 
 public enum ReclamationStatus {
-    Open,
-    InProgress,
-    ReOpen,
-    Resolved,
-    Closed
+    OPEN,
+    IN_PROGRESS,
+    REOPEN,
+    RESOLVED,
+    CLOSED
 }
