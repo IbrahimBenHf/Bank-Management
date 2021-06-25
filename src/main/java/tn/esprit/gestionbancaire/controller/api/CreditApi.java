@@ -28,7 +28,7 @@ public interface CreditApi {
     })
     ResponseEntity<Credit> save(@RequestBody Credit credit);
 
-    @PatchMapping(value = APP_ROOT + "/credits/update/etat/{idCredit}/{creditStatus}" , consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PatchMapping(value = APP_ROOT + "/credits/update/status/{idCredit}/{creditStatus}" , consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Modify credit status", notes = "this methode can modify credit status", response = Credit.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Credit status modified "),
