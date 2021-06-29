@@ -15,6 +15,11 @@ public class Card implements Serializable {
 
     private static final long serialVersionUID = -4001423874330476267L;
 
+    private boolean isBlocked;
+
+    //This should be reset to 0 every week
+    private float withdrawnAmount;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;

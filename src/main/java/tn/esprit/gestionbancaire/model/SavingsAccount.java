@@ -10,4 +10,6 @@ import javax.persistence.Entity;
 @EqualsAndHashCode(callSuper = true)
 public class SavingsAccount extends Account {
     private static final long serialVersionUID = -8485522286606930927L;
+
+    private float bonusRate;
 }

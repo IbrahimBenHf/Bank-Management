@@ -15,8 +15,14 @@ import java.io.Serializable;
 public abstract class Product implements Serializable {
 
     private static final long serialVersionUID = -8939684834090152987L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
+    private String title;
+
+    private String description;
+
+    private String advantages;
 }
