@@ -1,12 +1,9 @@
 package tn.esprit.gestionbancaire.model;
 
 import java.util.Date;
+import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import tn.esprit.gestionbancaire.enums.CivilState;
 import tn.esprit.gestionbancaire.enums.Sexe;
@@ -45,6 +42,10 @@ public class User {
 
 	@Column(name = "civil_state")
 	private CivilState civilState;
+
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	//@JsonManagedReference
+	private List<Credit> credits;
 
 	// getters and setters
 }

@@ -2,11 +2,11 @@ package tn.esprit.gestionbancaire.model;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import tn.esprit.gestionbancaire.enums.CreditStatus;
 
 import java.util.List;
 
@@ -22,6 +22,9 @@ public class Credit extends AbstractEntity {
     @Enumerated(EnumType.STRING)
     private CreditStatus creditStatus;
 
+    @Column(name = "notes")
+    private String notes;
+
     @JsonIgnore
     @Column(name = "archived", nullable = false, columnDefinition = "bit default 0")
     private boolean archived;
@@ -29,9 +32,17 @@ public class Credit extends AbstractEntity {
     @OneToMany(mappedBy = "credit", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     //@JsonManagedReference
     private List<AdministrativeDocument> administrativeDocuments;
-
+/*
     @Column(name = "idUser")
-    private int idUser;
+    private int idUser;*/
+
+    @ManyToOne
+    //@JsonBackReference
+    @JsonIgnore
+    @JoinColumn(name = "iduser")
+    private User user;
+
+
 
 /*
     @Column(name = "etatcredit")
