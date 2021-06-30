@@ -1,6 +1,5 @@
 package tn.esprit.gestionbancaire.controller.api;
 
-import com.flickr4java.flickr.FlickrException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -8,14 +7,12 @@ import io.swagger.annotations.ApiResponses;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import tn.esprit.gestionbancaire.model.Credit;
-import tn.esprit.gestionbancaire.model.CreditStatus;
+import tn.esprit.gestionbancaire.enums.CreditStatus;
 
 import java.util.List;
 
 import static tn.esprit.gestionbancaire.utils.Constants.APP_ROOT;
-import static tn.esprit.gestionbancaire.utils.Constants.CREDIT;
 
 @Api("credits")
 public interface CreditApi {

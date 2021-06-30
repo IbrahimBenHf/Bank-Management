@@ -9,7 +9,7 @@ import tn.esprit.gestionbancaire.exception.ErrorCodes;
 import tn.esprit.gestionbancaire.exception.InvalidEntityException;
 import tn.esprit.gestionbancaire.exception.InvalidOperationException;
 import tn.esprit.gestionbancaire.model.Credit;
-import tn.esprit.gestionbancaire.model.CreditStatus;
+import tn.esprit.gestionbancaire.enums.CreditStatus;
 import tn.esprit.gestionbancaire.repository.CreditRepository;
 import tn.esprit.gestionbancaire.services.CreditService;
 import tn.esprit.gestionbancaire.validator.CreditValidator;

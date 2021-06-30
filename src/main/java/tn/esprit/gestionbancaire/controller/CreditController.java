@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import tn.esprit.gestionbancaire.controller.api.CreditApi;
 import tn.esprit.gestionbancaire.model.Credit;
-import tn.esprit.gestionbancaire.model.CreditStatus;
+import tn.esprit.gestionbancaire.enums.CreditStatus;
 import tn.esprit.gestionbancaire.services.CreditService;
 
 import java.util.List;

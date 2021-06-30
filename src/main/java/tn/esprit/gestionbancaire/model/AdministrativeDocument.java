@@ -1,11 +1,11 @@
 package tn.esprit.gestionbancaire.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import tn.esprit.gestionbancaire.enums.AdministrativeDocumentType;
 
 import javax.persistence.*;
 

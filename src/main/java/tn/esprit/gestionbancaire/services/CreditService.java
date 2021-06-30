@@ -1,7 +1,7 @@
 package tn.esprit.gestionbancaire.services;
 
 import tn.esprit.gestionbancaire.model.Credit;
-import tn.esprit.gestionbancaire.model.CreditStatus;
+import tn.esprit.gestionbancaire.enums.CreditStatus;
 
 import java.util.List;
 
@@ -20,6 +20,8 @@ public interface CreditService {
     List<Credit> findAllNotArchived(Boolean archived);
 
     void delete(Integer id);
+
+
 
 
 
