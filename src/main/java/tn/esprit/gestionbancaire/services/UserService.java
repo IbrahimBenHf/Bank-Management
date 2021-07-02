@@ -48,13 +48,6 @@ public class UserService implements IUserService{
 	@Override
 	public List<User> getAll() {
 		// TODO Auto-generated method stub
-		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-		if (principal instanceof UserDetails) {
-		  String username = ((UserDetails)principal).getUsername();
-		} else {
-		  String username = principal.toString();
-		}
 		return userRepository.findAll();
 	}
 
