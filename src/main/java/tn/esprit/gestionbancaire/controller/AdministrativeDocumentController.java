@@ -52,7 +52,7 @@ public class AdministrativeDocumentController  implements AdministrativeDocument
     */
 
     @Override
-    public ResponseEntity<AdministrativeDocument> save(Integer id, AdministrativeDocument administrativeDocument) {
+    public ResponseEntity<AdministrativeDocument> save(AdministrativeDocument administrativeDocument) {
         return ResponseEntity.ok(administrativeDocumentService.save(administrativeDocument));
     }
 

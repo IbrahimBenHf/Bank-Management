@@ -34,13 +34,13 @@ public interface AdministrativeDocumentApi {
     ResponseEntity<AdministrativeDocument> save(@PathVariable("idCredit") Integer idCredit, @RequestBody AdministrativeDocument administrativeDocument, @RequestPart("file") MultipartFile photo, @PathVariable("title") String title) throws IOException, FlickrException;
     */
 
-    @PostMapping(value = APP_ROOT + "/administrativedocuments/create/{idCredit}" , consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = APP_ROOT + "/administrativedocuments/create" , consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "add a administrative documents", notes = "this methode can add new administrative documents", response = AdministrativeDocument.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "administrative documents added "),
             @ApiResponse(code = 400, message = "administrative documents is invalid")
     })
-    ResponseEntity<AdministrativeDocument> save(@PathVariable("idCredit") Integer idCredit,@RequestBody AdministrativeDocument administrativeDocument) ;
+    ResponseEntity<AdministrativeDocument> save(@RequestBody AdministrativeDocument administrativeDocument) ;
 
 
     @PatchMapping(value = APP_ROOT + "/administrativedocuments/update/photo/{id}/{title}")

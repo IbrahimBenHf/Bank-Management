@@ -1,5 +1,6 @@
 package tn.esprit.gestionbancaire.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,8 +26,10 @@ public class AdministrativeDocument extends AbstractEntity {
     private AdministrativeDocumentType administrativeDocumentType;
 
     @ManyToOne
-    //@JsonBackReference
-    @JsonIgnore
-    @JoinColumn(name = "idcredit")
+    @JsonBackReference
+    //@JsonIgnore
+    @JoinColumn(name = "credit")
     private Credit credit;
+
+
 }
