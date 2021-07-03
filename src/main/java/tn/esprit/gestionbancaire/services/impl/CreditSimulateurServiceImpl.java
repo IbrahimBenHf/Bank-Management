@@ -11,12 +11,10 @@ import tn.esprit.gestionbancaire.model.Credit;
 import tn.esprit.gestionbancaire.services.CreditService;
 import tn.esprit.gestionbancaire.services.CreditSimulateurService;
 
-import java.text.SimpleDateFormat;
 import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static tn.esprit.gestionbancaire.utils.Constants.*;
@@ -163,8 +161,8 @@ public class CreditSimulateurServiceImpl implements CreditSimulateurService {
 
     @Override
     public Map<String,Integer> getUserStatusOverView(Integer id) {
-        double score = 0.0;
-        Map<String,Integer> map = new HashMap<>();
+        Integer score = 0;
+        Map<String,Integer> map = new LinkedHashMap<>();
         //User user = userService.findById(id);
         Credit credit = creditService.findById(id);
         //
@@ -212,6 +210,8 @@ public class CreditSimulateurServiceImpl implements CreditSimulateurService {
             map.put("Overdraft", 1000);
         }
 
+        score = map.entrySet().stream().mapToInt(e->e.getValue()).sum();
+        map.put("FinalScore", score);
         return map;
     }
 
