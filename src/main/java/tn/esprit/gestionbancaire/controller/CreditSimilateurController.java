@@ -17,9 +17,30 @@ public class CreditSimilateurController implements CreditSimilateurApi {
     ) {
         this.creditSimulateurService = creditSimulateurService;
     }
+
     @Override
-    public Map<Integer, Double> creditVehicle(double vehicleAmout, Integer vehicleFiscalPower, double selfFinancing, Integer repaymentPeriod) {
-        return creditSimulateurService.creditVehicle(vehicleAmout,vehicleFiscalPower,selfFinancing,repaymentPeriod);
+    public Map<Integer, Double> vehicleCredit(double vehicleAmout, Integer vehicleFiscalPower, double selfFinancing, Integer repaymentPeriod) {
+        return creditSimulateurService.vehicleCredit(vehicleAmout,vehicleFiscalPower,selfFinancing,repaymentPeriod);
+    }
+
+    @Override
+    public Map<Integer, Double> vehicleCredit(double vehicleAmout, Integer vehicleFiscalPower, double selfFinancing, Integer repaymentPeriod, double rate) {
+        return creditSimulateurService.vehicleCredit(vehicleAmout,vehicleFiscalPower,selfFinancing,repaymentPeriod,rate);
+    }
+
+    @Override
+    public Map<Integer, Double> personalCredit(double creditAmout, Integer repaymentPeriod) {
+        return  creditSimulateurService.prsonalCredit(creditAmout,repaymentPeriod);
+    }
+
+    @Override
+    public Map<Integer, Double> personalCredit(double creditAmout, Integer repaymentPeriod, double rate) {
+        return  creditSimulateurService.prsonalCredit(creditAmout,repaymentPeriod,rate);
+    }
+
+    @Override
+    public Map<String, Integer> getUserScore(Integer id) {
+        return creditSimulateurService.getUserStatusOverView(id);
     }
 
 
