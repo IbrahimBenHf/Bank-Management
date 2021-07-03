@@ -7,6 +7,8 @@ import io.swagger.annotations.ApiResponses;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import java.util.Map;
 
 import static tn.esprit.gestionbancaire.utils.Constants.APP_ROOT;
@@ -14,35 +16,35 @@ import static tn.esprit.gestionbancaire.utils.Constants.APP_ROOT;
 @Api("creditSimilateur")
 public interface CreditSimilateurApi {
 
-    @GetMapping(value = APP_ROOT + "/creditsimilateur/vehiclecreditsimilateur/{vehicleAmout}/{vehicleFiscalPower}/{selfFinancing}/{repaymentPeriod}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = APP_ROOT + "/creditsimilateur/vehiclecreditsimilateur", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Simulate vehicle credit", notes = "Simulate vehicle credit ", responseContainer = "Map<Integer, Double>")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Map of repayments / Void list")
     })
-    Map<Integer, Double> vehicleCredit(@PathVariable("vehicleAmout") double vehicleAmout,@PathVariable("vehicleFiscalPower") Integer vehicleFiscalPower,@PathVariable("selfFinancing") double selfFinancing,@PathVariable("repaymentPeriod") Integer repaymentPeriod);
+    Map<Integer, Double> vehicleCredit(@RequestParam("vehicleAmout") double vehicleAmout, @RequestParam("vehicleFiscalPower") Integer vehicleFiscalPower, @RequestParam("selfFinancing") double selfFinancing, @RequestParam("repaymentPeriod") Integer repaymentPeriod);
 
-    @GetMapping(value = APP_ROOT + "/creditsimilateur/vehiclecreditsimilateur/{vehicleAmout}/{vehicleFiscalPower}/{selfFinancing}/{repaymentPeriod}/{rate}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = APP_ROOT + "/creditsimilateur/vehiclecreditsimilateurforadmin", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Simulate vehicle credit", notes = "Similate vehicle credit ", responseContainer = "Map<Integer, Double>")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Map of repayments / Void list")
     })
-    Map<Integer, Double> vehicleCredit(@PathVariable("vehicleAmout") double vehicleAmout,@PathVariable("vehicleFiscalPower") Integer vehicleFiscalPower,@PathVariable("selfFinancing") double selfFinancing,@PathVariable("repaymentPeriod") Integer repaymentPeriod,@PathVariable("rate") double rate);
+    Map<Integer, Double> vehicleCredit(@RequestParam("vehicleAmout") double vehicleAmout,@RequestParam("vehicleFiscalPower") Integer vehicleFiscalPower,@RequestParam("selfFinancing") double selfFinancing,@RequestParam("repaymentPeriod") Integer repaymentPeriod,@RequestParam("rate") double rate);
 
 
-    @GetMapping(value = APP_ROOT + "/creditsimilateur/personalcreditsimilateur/{creditAmout}/{repaymentPeriod}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = APP_ROOT + "/creditsimilateur/personalcreditsimilateur", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Simulate personal credit", notes = "Simulate personal credit ", responseContainer = "Map<Integer, Double>")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Map of repayments / Void list")
     })
-    Map<Integer, Double> personalCredit(@PathVariable("creditAmout") double creditAmout,@PathVariable("repaymentPeriod") Integer repaymentPeriod);
+    Map<Integer, Double> personalCredit(@RequestParam("creditAmout") double creditAmout,@RequestParam("repaymentPeriod") Integer repaymentPeriod);
 
 
-    @GetMapping(value = APP_ROOT + "/creditsimilateur/personalcreditsimilateur/{creditAmout}/{repaymentPeriod}/{rate}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = APP_ROOT + "/creditsimilateur/personalcreditsimilateurforadmin", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Simulate personal credit", notes = "Simulate personal Credit ", responseContainer = "Map<Integer, Double>")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Map of repayments / Void list")
     })
-    Map<Integer, Double> personalCredit(@PathVariable("creditAmout") double creditAmout,@PathVariable("repaymentPeriod") Integer repaymentPeriod,@PathVariable("selfFinancing") double rate);
+    Map<Integer, Double> personalCredit(@RequestParam("creditAmout") double creditAmout,@RequestParam("repaymentPeriod") Integer repaymentPeriod,@RequestParam("rate") double rate);
 
 
     @GetMapping(value = APP_ROOT + "/creditsimilateur/creditvehiclesimilateur/{id}", produces = MediaType.APPLICATION_JSON_VALUE)

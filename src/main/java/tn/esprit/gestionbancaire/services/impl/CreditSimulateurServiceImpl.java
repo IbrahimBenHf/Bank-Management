@@ -42,7 +42,7 @@ public class CreditSimulateurServiceImpl implements CreditSimulateurService {
     }
     @Override
     public Map<Integer, Double> prsonalCredit(double creditAmout, Integer repaymentPeriod) {
-        if (creditAmout > MIN_MEDIA_CREDIT && creditAmout < MAX_MEDIA_CREDIT) {
+        if (creditAmout < MIN_MEDIA_CREDIT || creditAmout > MAX_MEDIA_CREDIT) {
             log.error("Credit Amout should less then 100000 more then 10000 ", creditAmout);
             throw new InvalidOperationException("Credit Amout should less then 100000 more then 10000 !!", ErrorCodes.MEDIA_CREDIT_SIMILATEUR_AMOUNT);
         }
@@ -97,7 +97,7 @@ public class CreditSimulateurServiceImpl implements CreditSimulateurService {
     //for admin
     @Override
     public Map<Integer, Double> prsonalCredit(double creditAmout, Integer repaymentPeriod, double rate) {
-        if (creditAmout > MIN_MEDIA_CREDIT && creditAmout < MAX_MEDIA_CREDIT) {
+        if (creditAmout < MIN_MEDIA_CREDIT || creditAmout > MAX_MEDIA_CREDIT) {
             log.error("Credit Amout should less then 100000 more then 10000 ", creditAmout);
             throw new InvalidOperationException("Credit Amout should less then 100000 more then 10000 !!", ErrorCodes.MEDIA_CREDIT_SIMILATEUR_AMOUNT);
         }
