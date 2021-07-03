@@ -55,6 +55,19 @@ public class User {
 	@Column(name = "roles")
 	private String roles;
 
+	
+	public User() {
+		super();
+	}
+
+	public User(String userName, String password, Boolean active, String roles) {
+		super();
+		this.userName = userName;
+		this.password = password;
+		this.active = active;
+		this.roles = roles;
+	}
+
 	public Long getId() {
 		return id;
 	}
