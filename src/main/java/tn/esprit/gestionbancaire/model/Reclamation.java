@@ -1,5 +1,7 @@
 package tn.esprit.gestionbancaire.model;
 
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -33,6 +35,7 @@ public class Reclamation extends AbstractEntity {
     @Column(name = "user_id")
     private Long userId;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "reclamation", fetch = FetchType.LAZY)
     private List<ReclamationComment> reclamationComments;
 

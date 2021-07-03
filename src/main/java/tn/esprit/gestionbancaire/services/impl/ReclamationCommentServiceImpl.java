@@ -44,8 +44,11 @@ public class ReclamationCommentServiceImpl implements ReclamationCommentService 
     }
 
     @Override
-    public ReclamationComment update(ReclamationComment reclamationComment) {
-        return null;
+    public ReclamationComment update(Integer id,ReclamationComment newReclamationComment) {
+        ReclamationComment reclamationComment = findById(id);
+        reclamationComment.setLastModifiedDate(Instant.now());
+        reclamationComment.setComment(newReclamationComment.getComment());
+        return  reclamationCommentRepository.save(reclamationComment);
     }
 
     @Override
