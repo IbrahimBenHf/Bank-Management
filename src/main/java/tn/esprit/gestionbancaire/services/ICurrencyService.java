@@ -10,7 +10,7 @@ public interface ICurrencyService {
 
     Currency updateCurrency(Integer idCurrency);
 
-    Currency findBySymbol(String symbol);
+    Currency findByCode(String code);
 
     List<Currency> findAll();
 

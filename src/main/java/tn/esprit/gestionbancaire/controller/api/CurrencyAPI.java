@@ -7,9 +7,9 @@ import io.swagger.annotations.ApiResponses;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import tn.esprit.gestionbancaire.model.Credit;
 import tn.esprit.gestionbancaire.model.Currency;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import static tn.esprit.gestionbancaire.utils.Constants.APP_ROOT;
@@ -39,28 +39,44 @@ public interface CurrencyAPI {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "List of Currency / Void list")
     })
-    List<Currency> getAll();
+    ResponseEntity<List<Currency>> getAll();
 
     @GetMapping(value = APP_ROOT + "/currencies/available", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Get all availables currencies", notes = "This methode get all available Currency ", responseContainer = "List<Currency>")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "List of Currency / Void list")
     })
-    List<Currency> getAvailableToExchange();
+    ResponseEntity<List<Currency>>  getAvailableToExchange();
 
     @GetMapping(value = APP_ROOT + "/currencies/crypto", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Get all CryptoCurrency", notes = "This methode get all CryptoCurrency ", responseContainer = "List<Currency>")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "List of Currency / Void list")
     })
-    List<Currency> getAllCryptoCurrency();
+    ResponseEntity<List<Currency>>  getAllCryptoCurrency();
 
     @DeleteMapping(APP_ROOT + "/currencies/delete/currency/{idCurrency}")
-    @ApiOperation(value = "Delete currency", notes = "This methode can delete Currency", response = Credit.class)
+    @ApiOperation(value = "Delete currency", notes = "This methode can delete Currency", response = Currency.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Currency deleted "),
             @ApiResponse(code = 400, message = "Currency is invalid")
     })
     void deleteCurrency(@PathVariable("idCurrency") Integer idCurrency);
+
+    @PatchMapping(APP_ROOT + "/currencies/find/{code}")
+    @ApiOperation(value = "find currency by code", notes = "this methode can find currency by code", response = Currency.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Currency found "),
+            @ApiResponse(code = 404, message = "Currency is not found")
+    })
+    ResponseEntity<Currency> getByName(@PathVariable("code") String code);
+
+    @PatchMapping(APP_ROOT + "/currencies/Convert/{from}/{to}")
+    @ApiOperation(value = "convert currencies", notes = "this methode can convert currencies", response = String.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Currency exchanged "),
+            @ApiResponse(code = 404, message = "Currency is not exchanged")
+    })
+    ResponseEntity<String> retrieveExchangeValue(@PathVariable("from") String from,@PathVariable("to") String to,@RequestBody BigDecimal quantity);
 
 }

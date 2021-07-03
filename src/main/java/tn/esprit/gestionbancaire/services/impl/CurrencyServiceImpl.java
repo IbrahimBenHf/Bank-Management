@@ -31,10 +31,10 @@ public class CurrencyServiceImpl implements ICurrencyService {
     }
 
     @Override
-    public Currency findBySymbol(String symbol) {
+    public Currency findByCode(String code) {
 
         return currencyRepository.findAll().stream()
-                .filter(x -> x.getSymbol().equalsIgnoreCase(symbol)).findFirst().get();
+                .filter(x -> x.getSymbol().equalsIgnoreCase(code)).findFirst().get();
     }
 
     @Override
