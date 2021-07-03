@@ -27,7 +27,7 @@ services:
     networks:
       pi_project:
 networks:
-  mini_project:
+  pi_project:
     driver: bridge
 volumes:
   my-db:
