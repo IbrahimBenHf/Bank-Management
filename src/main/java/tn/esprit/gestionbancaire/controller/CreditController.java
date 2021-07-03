@@ -8,6 +8,7 @@ import tn.esprit.gestionbancaire.model.Credit;
 import tn.esprit.gestionbancaire.enums.CreditStatus;
 import tn.esprit.gestionbancaire.services.CreditService;
 
+import java.time.Instant;
 import java.util.List;
 
 
@@ -24,6 +25,8 @@ public class CreditController implements CreditApi {
     }
     @Override
     public ResponseEntity<Credit> save(Credit credit) {
+        credit.setLastModifiedDate(Instant.now());
+        credit.setCreationDate(Instant.now());
         return ResponseEntity.ok(creditService.save(credit));
     }
 
@@ -34,7 +37,9 @@ public class CreditController implements CreditApi {
 
     @Override
     public ResponseEntity<Credit> updateCredit(Integer idCredit) {
-        return null;
+        Credit credit = creditService.findById(idCredit);
+        credit.setLastModifiedDate(Instant.now());
+        return ResponseEntity.ok(creditService.save(credit));
     }
 
     @Override
@@ -50,5 +55,10 @@ public class CreditController implements CreditApi {
     @Override
     public List<Credit> findAll() {
         return creditService.findAll();
+    }
+
+    @Override
+    public List<String> addNote(Integer id, String note) {
+        return creditService.addNote(id,note);
     }
 }

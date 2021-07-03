@@ -25,13 +25,13 @@ public interface CreditApi {
     })
     ResponseEntity<Credit> save(@RequestBody Credit credit);
 
-    @PatchMapping(value = APP_ROOT + "/credits/update/status/{idCredit}/{creditStatus}" , consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PatchMapping(value = APP_ROOT + "/credits/update/status/{idCredit}" , produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Modify credit status", notes = "this methode can modify credit status", response = Credit.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Credit status modified "),
             @ApiResponse(code = 400, message = "Credit status is invalid")
     })
-    ResponseEntity<Credit> updateCreditStatus(@PathVariable("idCredit") Integer idCredit, @PathVariable("creditStatus") CreditStatus creditStatus);
+    ResponseEntity<Credit> updateCreditStatus(@PathVariable("idCredit") Integer idCredit, @RequestParam("status") CreditStatus creditStatus);
 
     @PatchMapping(APP_ROOT + "/credits/update/credit/{idCredit}")
     @ApiOperation(value = "Modify credit", notes = "this methode can modify credit", response = Credit.class)
@@ -62,5 +62,12 @@ public interface CreditApi {
             @ApiResponse(code = 200, message = "List of credits / Void list")
     })
     List<Credit> findAll();
+
+    @GetMapping(value = APP_ROOT + "/credits/addnote/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Add note to credit note", notes = "This methode Add note to credit note ", responseContainer = "List<String>")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "List of credits / Void list")
+    })
+    List<String> addNote(@PathVariable("id") Integer id,@RequestParam("note") String note);
 
 }

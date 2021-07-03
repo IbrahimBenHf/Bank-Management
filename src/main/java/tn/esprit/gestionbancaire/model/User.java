@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import tn.esprit.gestionbancaire.enums.CivilState;
 import tn.esprit.gestionbancaire.enums.Sexe;
 
@@ -44,7 +45,7 @@ public class User {
 	private CivilState civilState;
 
 	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	//@JsonManagedReference
+	@JsonManagedReference
 	private List<Credit> credits;
 
 	// getters and setters

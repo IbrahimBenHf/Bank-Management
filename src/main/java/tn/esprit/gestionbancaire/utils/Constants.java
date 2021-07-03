@@ -9,4 +9,7 @@ public interface Constants {
   String DOCUMENT = APP_ROOT + "/document";
 
   double MIN_SELF_FINANCING = 0.2;
+
+  double MAX_MEDIA_CREDIT = 100000.0;
+  double MIN_MEDIA_CREDIT = 10000.0;
 }

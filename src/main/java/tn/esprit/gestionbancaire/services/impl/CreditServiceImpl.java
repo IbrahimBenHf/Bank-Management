@@ -14,6 +14,8 @@ import tn.esprit.gestionbancaire.repository.CreditRepository;
 import tn.esprit.gestionbancaire.services.CreditService;
 import tn.esprit.gestionbancaire.validator.CreditValidator;
 
+import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -50,9 +52,21 @@ public class CreditServiceImpl implements CreditService {
             throw new InvalidOperationException("IS not allowed to chagne status to null",
                     ErrorCodes.CREDIT_NON_MODIFIABLE);
         }
+        if(creditStatus.equals(CreditStatus.ACCEPTED) || creditStatus.equals(CreditStatus.REFUSED)){
+            Credit credit = checkCreditStatus(idCredit);
+            credit.setCreditStatus(creditStatus);
+            credit.setArchived(true);
+            List<String> notes = credit.getNotes();
+            notes.add("Your Credit Request Now is " + creditStatus);
+            credit.setNotes(notes);
+        }
+
         Credit credit = checkCreditStatus(idCredit);
         credit.setCreditStatus(creditStatus);
-
+        List<String> notes = credit.getNotes();
+        notes.add("Your Credit Request Now is " + creditStatus);
+        credit.setNotes(notes);
+        credit.setLastModifiedDate(Instant.now());
         return creditRepository.save(credit);
     }
 
@@ -95,12 +109,28 @@ public class CreditServiceImpl implements CreditService {
             return;
         }
         Optional<Credit> credit = creditRepository.findById(id);
-        if (credit.get().getCreditStatus().equals(CreditStatus.OPEN) || credit.get().getCreditStatus().equals(CreditStatus.IN_PROGRESS) || credit.get().getCreditStatus().equals(CreditStatus.WAITING)) {
-            throw new InvalidOperationException("Faild to delete credit, Credit must be in 'ACCEPTED' or 'REFUSED'", ErrorCodes.CREDIT_IS_NOT_CLOSED);
-        }
 
+            if (credit.isPresent() && (credit.get().getCreditStatus().equals(CreditStatus.OPEN) || credit.get().getCreditStatus().equals(CreditStatus.IN_PROGRESS) || credit.get().getCreditStatus().equals(CreditStatus.WAITING))) {
+                throw new InvalidOperationException("Faild to delete credit, Credit must be in 'ACCEPTED' or 'REFUSED'", ErrorCodes.CREDIT_IS_NOT_CLOSED);
+            }
         creditRepository.deleteById(id);
 
+    }
+
+    @Override
+    public List<String> addNote(Integer id,String note) {
+        checkIdCredit(id);
+        Credit credit = creditRepository.getById(id);
+        List<String> notes = credit.getNotes();
+        notes.add(note);
+        credit.setNotes(notes);
+        credit.setLastModifiedDate(Instant.now());
+        return notes;
+    }
+
+    @Override
+    public long countCreditByCreditStatus(CreditStatus status) {
+        return creditRepository.countCreditByCreditStatus(status);
     }
 
     private void checkIdCredit(Integer idCredit) {
