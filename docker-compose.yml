@@ -18,7 +18,7 @@ services:
       - my-db:/var/lib/mysql
   gestionBancaire:
     build: .
-    image: gestionBancaire
+    image: gestionbancaire
     ports:
       - "8081:8081"
     restart: always
