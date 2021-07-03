@@ -14,7 +14,10 @@ public enum ErrorCodes {
     RECLAMATION_NULL(2002),
     // Liste des exception techniaues
     UPDATE_PHOTO_EXCEPTION(14000),
-    UNKNOWN_CONTEXT(14001)
+    UNKNOWN_CONTEXT(14001),
+
+    ACCOUNT_TEMPLATE_NOT_FOUND(3000),
+    ACCOUNT_TEMPLATE_NOT_VALID(3001),
     ;
 
     private int code;
