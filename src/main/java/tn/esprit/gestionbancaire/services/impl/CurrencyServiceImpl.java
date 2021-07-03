@@ -34,7 +34,7 @@ public class CurrencyServiceImpl implements ICurrencyService {
     public Currency findByCode(String code) {
 
         return currencyRepository.findAll().stream()
-                .filter(x -> x.getSymbol().equalsIgnoreCase(code)).findFirst().get();
+                .filter(x -> x.getCode().equalsIgnoreCase(code)).findFirst().get();
     }
 
     @Override
@@ -45,7 +45,7 @@ public class CurrencyServiceImpl implements ICurrencyService {
     @Override
     public List<Currency> findAvailableToExchange() {
         return currencyRepository.findAll().stream()
-                .filter(x-> x.getSellValue().compareTo(BigDecimal.ZERO)!=0)
+                .filter(x-> x.getSellValue()!= null &&  x.getSellValue().compareTo(BigDecimal.ZERO)!=0)
                 .collect(Collectors.toList());
     }
 

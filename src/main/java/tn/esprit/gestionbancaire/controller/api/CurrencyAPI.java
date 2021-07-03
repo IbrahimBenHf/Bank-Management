@@ -63,15 +63,15 @@ public interface CurrencyAPI {
     })
     void deleteCurrency(@PathVariable("idCurrency") Integer idCurrency);
 
-    @PatchMapping(APP_ROOT + "/currencies/find/{code}")
+    @GetMapping(value = APP_ROOT + "/currencies/find", consumes = MediaType.APPLICATION_JSON_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "find currency by code", notes = "this methode can find currency by code", response = Currency.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Currency found "),
             @ApiResponse(code = 404, message = "Currency is not found")
     })
-    ResponseEntity<Currency> getByName(@PathVariable("code") String code);
+    ResponseEntity<Currency> getByName(@RequestBody String code);
 
-    @PatchMapping(APP_ROOT + "/currencies/Convert/{from}/{to}")
+    @GetMapping(APP_ROOT + "/currencies/Convert/{from}/{to}")
     @ApiOperation(value = "convert currencies", notes = "this methode can convert currencies", response = String.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Currency exchanged "),
