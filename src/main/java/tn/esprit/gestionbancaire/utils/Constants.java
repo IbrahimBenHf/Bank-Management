@@ -7,4 +7,6 @@ public interface Constants {
   String CREDIT = APP_ROOT + "/credits";
 
   String DOCUMENT = APP_ROOT + "/document";
+
+  String ACCOUNT_NUMBER_PREFIX = "01";
 }

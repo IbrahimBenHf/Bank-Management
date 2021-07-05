@@ -1,8 +1,6 @@
 package tn.esprit.gestionbancaire.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -14,24 +12,30 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
+@ToString(callSuper = true)
 public abstract class Account implements Serializable {
 
     private static final long serialVersionUID = -4704591442705123116L;
 
-    private int accountNumber;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
+
+    private String accountNumber;
 
     private Date creationDate;
 
     private float balance;
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
 
     @ManyToOne
     private AccountTemplate accountTemplate;
 
     @OneToMany(mappedBy = "account")
     private List<Card> cards;
+
+    @ManyToOne
+    private User user;
 
 }
