@@ -1,6 +1,7 @@
 package tn.esprit.gestionbancaire.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,6 +27,11 @@ public class UserController {
 	private ResponseEntity<List<User>> getAll()   
 	{  
 		return new ResponseEntity<List<User>>(userService.getAll(), HttpStatus.OK);
+	} 
+	@GetMapping("/getUsersByProfession")  
+	private ResponseEntity<Map<String,List<User>>> getUsersByProfession()   
+	{  
+		return new ResponseEntity<Map<String,List<User>>>(userService.getUsersByProfession(), HttpStatus.OK);
 	} 
 	@GetMapping("/user/{id}")  
 	private ResponseEntity<User> getUserById(@PathVariable("id") Long id)   

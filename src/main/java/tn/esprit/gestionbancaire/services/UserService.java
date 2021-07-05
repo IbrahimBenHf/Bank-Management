@@ -1,11 +1,12 @@
 package tn.esprit.gestionbancaire.services;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -55,5 +56,54 @@ public class UserService implements IUserService{
 	public Optional<User> getUserByUsername(String username) {
 		// TODO Auto-generated method stub
 		return userRepository.findUserByUserName(username);
+	}
+
+	@Override
+	public Map<String, List<User>> getUsersByProfession() {
+		// TODO Auto-generated method stub
+		Map<String, List<User>> map = new HashMap<>();
+		for (User user : userRepository.findAll()) {
+			if(map.get(user.getProfession())==null)
+				map.put(user.getProfession(), new ArrayList<User>());
+			map.get(user.getProfession()).add(user);
+
+		}
+		return map;
+	}
+
+	@Override
+	public Map<Integer, List<User>> getUsersByAge() {
+		Map<Integer, List<User>> map = new HashMap<>();
+		for (User user : userRepository.findAll()) {
+			if(map.get(user.getAge())==null)
+				map.put(user.getAge(), new ArrayList<User>());
+			map.get(user.getAge()).add(user);
+
+		}
+		return map;
+	}
+
+	@Override
+	public Map<String, List<User>> getUsersBySexe() {
+		Map<String, List<User>> map = new HashMap<>();
+		for (User user : userRepository.findAll()) {
+			if(map.get(user.getSexe().toString())==null)
+				map.put(user.getSexe().toString(), new ArrayList<User>());
+			map.get(user.getSexe().toString()).add(user);
+
+		}
+		return map;
+	}
+
+	@Override
+	public Map<String, List<User>> getUsersByCivilStatus() {
+		Map<String, List<User>> map = new HashMap<>();
+		for (User user : userRepository.findAll()) {
+			if(map.get(user.getCivilState().toString())==null)
+				map.put(user.getCivilState().toString(), new ArrayList<User>());
+			map.get(user.getCivilState().toString()).add(user);
+
+		}
+		return map;
 	}
 }

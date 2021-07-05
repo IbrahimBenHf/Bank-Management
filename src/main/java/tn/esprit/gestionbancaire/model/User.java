@@ -1,6 +1,9 @@
 package tn.esprit.gestionbancaire.model;
 
+import java.util.Calendar;
+import static java.util.Calendar.*;
 import java.util.Date;
+import java.util.Locale;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -55,7 +58,11 @@ public class User {
 	@Column(name = "roles")
 	private String roles;
 
+	@Column(name = "profession")
+	private String profession;
 	
+	
+
 	public User() {
 		super();
 	}
@@ -172,7 +179,31 @@ public class User {
 		this.roles = roles;
 	}
 
+	public String getProfession() {
+		return profession;
+	}
+
+	public void setProfession(String profession) {
+		this.profession = profession;
+	}
 	// getters and setters
+
+	public int getAge() {
+		Calendar a = getCalendar(birthDate);
+	    Calendar b = getCalendar(new Date());
+	    int diff = b.get(YEAR) - a.get(YEAR);
+	    if (a.get(MONTH) > b.get(MONTH) || 
+	        (a.get(MONTH) == b.get(MONTH) && a.get(DATE) > b.get(DATE))) {
+	        diff--;
+	    }
+	    return diff;
+		 
+	}
+	public static Calendar getCalendar(Date date) {
+	    Calendar cal = Calendar.getInstance(Locale.US);
+	    cal.setTime(date);
+	    return cal;
+	}
 	
 	
 }
