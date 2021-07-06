@@ -38,7 +38,7 @@ public class AccountTemplateController implements AccountTemplateApi {
     }
 
     @Override
-    public ResponseEntity<Object> deleteCredit(long idAccountTemplate) {
+    public ResponseEntity<Object> deleteAccountTemplate(long idAccountTemplate) {
         try {
             accountTemplateService.delete(idAccountTemplate);
             return ResponseEntity.ok("Account with ID: " + idAccountTemplate + " has been deleted");

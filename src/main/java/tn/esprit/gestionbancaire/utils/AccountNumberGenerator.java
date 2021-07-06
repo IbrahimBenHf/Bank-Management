@@ -13,7 +13,7 @@ public class AccountNumberGenerator {
         //Generate two values to append to 'ACCOUNT_NUMBER_PREFIX'
         int r1 = value.nextInt(10);
         int r2 = value.nextInt(10);
-        start += Integer.toString(r1) + Integer.toString(r2) + " ";
+        start += r1 + r2 + " ";
 
         int count = 0;
         int n = 0;

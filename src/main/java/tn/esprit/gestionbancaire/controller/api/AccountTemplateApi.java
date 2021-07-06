@@ -37,7 +37,7 @@ public interface AccountTemplateApi {
             @ApiResponse(code = 200, message = "AccountTemplate deleted "),
             @ApiResponse(code = 400, message = "AccountTemplate not found")
     })
-    ResponseEntity<Object> deleteCredit(@PathVariable("idAccountTemplate") long idAccountTemplate);
+    ResponseEntity<Object> deleteAccountTemplate(@PathVariable("idAccountTemplate") long idAccountTemplate);
 
     @GetMapping(APP_ROOT + "/account_template/find/{idAccountTemplate}")
     @ApiOperation(value = "Find an account template", notes = "This methode retrieve an account template", response = AccountTemplate.class)
