@@ -18,6 +18,9 @@ public enum ErrorCodes {
 
     ACCOUNT_TEMPLATE_NOT_FOUND(3000),
     ACCOUNT_TEMPLATE_NOT_VALID(3001),
+
+    CREDIT_TEMPLATE_NOT_FOUND(3000),
+    CREDIT_TEMPLATE_NOT_VALID(3001),
     ;
 
     private int code;
