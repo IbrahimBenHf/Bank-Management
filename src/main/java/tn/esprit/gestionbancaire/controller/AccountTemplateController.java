@@ -27,7 +27,7 @@ public class AccountTemplateController implements AccountTemplateApi {
         try {
             accountTemplateService.save(accountTemplate);
             return ResponseEntity.ok(accountTemplate);
-        } catch (InvalidEntityException e){
+        } catch (InvalidEntityException e) {
             return new ResponseEntity<>(e.getErrors(), HttpStatus.BAD_REQUEST);
         }
     }
@@ -42,7 +42,16 @@ public class AccountTemplateController implements AccountTemplateApi {
         try {
             accountTemplateService.delete(idAccountTemplate);
             return ResponseEntity.ok("Account with ID: " + idAccountTemplate + " has been deleted");
-        }catch (EntityNotFoundException e){
+        } catch (EntityNotFoundException e) {
+            return new ResponseEntity<>(e.getErrorCode(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    public ResponseEntity<Object> findAccountTemplate(long idAccountTemplate) {
+        try {
+            AccountTemplate byId = accountTemplateService.findById(idAccountTemplate);
+            return ResponseEntity.ok(byId);
+        } catch (EntityNotFoundException e) {
             return new ResponseEntity<>(e.getErrorCode(), HttpStatus.BAD_REQUEST);
         }
     }

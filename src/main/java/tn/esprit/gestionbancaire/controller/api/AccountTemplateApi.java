@@ -16,7 +16,7 @@ import static tn.esprit.gestionbancaire.utils.Constants.APP_ROOT;
 @Api("AccountTemplate")
 public interface AccountTemplateApi {
 
-    @PostMapping(value = APP_ROOT + "/account_template/create" , consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = APP_ROOT + "/account_template/create", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Add an account template", notes = "this methode can add an account template", response = AccountTemplate.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Account template added "),
@@ -31,11 +31,19 @@ public interface AccountTemplateApi {
     })
     List<AccountTemplate> findAll();
 
-    @DeleteMapping(APP_ROOT + "/account_template/delete//{idAccountTemplate}")
+    @DeleteMapping(APP_ROOT + "/account_template/delete/{idAccountTemplate}")
     @ApiOperation(value = "Delete account template", notes = "This methode deletes an account template", response = AccountTemplate.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "AccountTemplate deleted "),
             @ApiResponse(code = 400, message = "AccountTemplate not found")
     })
     ResponseEntity<Object> deleteCredit(@PathVariable("idAccountTemplate") long idAccountTemplate);
+
+    @GetMapping(APP_ROOT + "/account_template/find/{idAccountTemplate}")
+    @ApiOperation(value = "Find an account template", notes = "This methode retrieve an account template", response = AccountTemplate.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "AccountTemplate retrieved"),
+            @ApiResponse(code = 400, message = "AccountTemplate not found")
+    })
+    ResponseEntity<Object> findAccountTemplate(@PathVariable("idAccountTemplate") long idAccountTemplate);
 }
