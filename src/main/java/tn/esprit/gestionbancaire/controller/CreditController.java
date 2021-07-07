@@ -58,6 +58,11 @@ public class CreditController implements CreditApi {
     }
 
     @Override
+    public List<Credit> findAllByStatus(CreditStatus status) {
+        return creditService.findAllByCreditStatus(status);
+    }
+
+    @Override
     public List<String> addNote(Integer id, String note) {
         return creditService.addNote(id,note);
     }

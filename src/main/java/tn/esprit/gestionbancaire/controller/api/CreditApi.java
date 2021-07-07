@@ -62,6 +62,12 @@ public interface CreditApi {
             @ApiResponse(code = 200, message = "List of credits / Void list")
     })
     List<Credit> findAll();
+    @GetMapping(value = APP_ROOT + "/credits", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Get all credits have specific status", notes = "This methode get all credit with specific", responseContainer = "List<Credit>")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "List of credits / Void list")
+    })
+    List<Credit> findAllByStatus(@RequestParam("status") CreditStatus status);
 
     @GetMapping(value = APP_ROOT + "/credits/addnote/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Add note to credit note", notes = "This methode Add note to credit note ", responseContainer = "List<String>")

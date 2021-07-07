@@ -8,7 +8,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.springframework.web.bind.annotation.ModelAttribute;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import tn.esprit.gestionbancaire.enums.CreditStatus;
 
 import java.util.List;
@@ -25,7 +26,7 @@ public class Credit extends AbstractEntity {
     @Enumerated(EnumType.STRING)
     private CreditStatus creditStatus;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "notes", joinColumns = @JoinColumn(name = "id"))
     @Column(name = "note")
     private List<String> notes;
@@ -34,7 +35,8 @@ public class Credit extends AbstractEntity {
     @Column(name = "archived", nullable = false, columnDefinition = "bit default 0")
     private boolean archived;
 
-    @OneToMany(mappedBy = "credit", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "credit", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @Fetch(value = FetchMode.SUBSELECT)
     @JsonManagedReference
     private List<AdministrativeDocument> administrativeDocuments;
 

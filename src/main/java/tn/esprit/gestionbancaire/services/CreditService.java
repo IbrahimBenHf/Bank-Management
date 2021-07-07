@@ -2,8 +2,6 @@ package tn.esprit.gestionbancaire.services;
 
 import tn.esprit.gestionbancaire.model.Credit;
 import tn.esprit.gestionbancaire.enums.CreditStatus;
-import tn.esprit.gestionbancaire.model.User;
-
 import java.util.List;
 
 public interface CreditService {
@@ -18,6 +16,8 @@ public interface CreditService {
 
     List<Credit> findCreditHistory(Integer id);
 
+    List<Credit> findAllByCreditStatus(CreditStatus creditStatus);
+
     List<Credit> findAllNotArchived(Boolean archived);
 
     void delete(Integer id);
@@ -26,6 +26,8 @@ public interface CreditService {
 
     //
     long countCreditByCreditStatus(CreditStatus status);
+
+    List<Credit> autoValidate();
 
 
 
