@@ -22,6 +22,10 @@ import java.util.List;
 @Table(name = "credit")
 public class Credit extends AbstractEntity {
 
+
+    @ManyToOne
+    private CreditTemplate creditTemplate;
+
     @Column(name = "creditstatus")
     @Enumerated(EnumType.STRING)
     private CreditStatus creditStatus;

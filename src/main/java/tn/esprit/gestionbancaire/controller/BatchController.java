@@ -24,7 +24,7 @@ public class BatchController  implements BatchApi {
         this.creditService = creditService;
     }
     @Override
-    @Scheduled(cron ="00 00 20 */2 * *" )
+    @Scheduled(cron ="00 00 20 */1 * *" )
     public void autoValidatorBatch() {
         creditService.autoValidate();
     }

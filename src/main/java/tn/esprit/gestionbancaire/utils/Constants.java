@@ -12,4 +12,6 @@ public interface Constants {
 
   double MAX_MEDIA_CREDIT = 100000.0;
   double MIN_MEDIA_CREDIT = 10000.0;
+
+  String ACCOUNT_NUMBER_PREFIX = "01";
 }

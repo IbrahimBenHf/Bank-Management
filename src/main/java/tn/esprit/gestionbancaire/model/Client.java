@@ -1,6 +1,6 @@
 package tn.esprit.gestionbancaire.model;
 
-import lombok.Data;
+import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,11 +9,21 @@ import javax.persistence.Id;
 import java.io.Serializable;
 
 @Entity
-@Data
-public class Currency implements Serializable {
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@ToString
+public class Client implements Serializable {
 
-    private static final long serialVersionUID = 2948915794988044361L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
+    private String firstName;
+    private String lastName;
+    private String address;
+    private String email;
+    private String phoneNumber;
+    private boolean validated;
+
 }
