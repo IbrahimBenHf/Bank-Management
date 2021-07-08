@@ -3,6 +3,7 @@ package tn.esprit.gestionbancaire.services;
 import tn.esprit.gestionbancaire.enums.TransactionType;
 import tn.esprit.gestionbancaire.model.Transaction;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -12,9 +13,11 @@ public interface ITransactionService {
 
     List<Transaction> getTransactionByType(TransactionType transactionType);
 
-    List<Transaction> getYearlyNegBalanceByUser(int idUser, int year);
+    List<Transaction> getTransactionByOperation(long  idOperation, Boolean isNegative);
 
-    Integer countNegativeTransactionBalanceByUser(int idUser);
+    BigDecimal getYearlyNegBalanceByUser(long idUser, int year);
+
+    Integer countNegativeTransactionBalanceByUser(long idUser);
 
     Double getAllNegativeBalance();
 

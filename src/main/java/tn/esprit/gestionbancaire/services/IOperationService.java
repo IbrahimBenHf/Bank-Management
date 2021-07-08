@@ -13,7 +13,7 @@ public interface IOperationService {
 
     List<Operation> getArchivedOperation(boolean inArchived);
 
-    List<Operation> getAllOperationByAccount(int accountNumber);
+    List<Operation> getAllOperationByAccount(long accountNumber);
 
-    List<Operation> getAllOperationByAccountAndStatus(int accountNumber, OperationStatus operationStatus);
+    List<Operation> getAllOperationByAccountAndStatus(long accountNumber, OperationStatus operationStatus);
 }

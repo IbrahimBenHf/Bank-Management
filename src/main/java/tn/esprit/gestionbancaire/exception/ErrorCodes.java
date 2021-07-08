@@ -15,6 +15,7 @@ public enum ErrorCodes {
     // Liste des exception techniaues
     UPDATE_PHOTO_EXCEPTION(14000),
     UNKNOWN_CONTEXT(14001)
+    // ErrorCodesForCurrency&Operation&Transaction
     ;
 
     private int code;

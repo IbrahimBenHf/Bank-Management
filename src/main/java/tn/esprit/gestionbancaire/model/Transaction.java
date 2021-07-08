@@ -1,4 +1,24 @@
 package tn.esprit.gestionbancaire.model;
 
-public class Transaction {
+import lombok.Data;
+import tn.esprit.gestionbancaire.enums.TransactionType;
+
+import javax.persistence.*;
+import java.io.Serializable;
+import java.util.Date;
+
+@Entity
+@Data
+@Table(name = "transaction")
+public class Transaction extends AbstractEntity implements Serializable {
+
+
+    private Date date;
+    private TransactionType transactionType;
+    private Boolean isNegativeTx;
+
+    @ManyToOne
+    @JoinColumn(name = "Operation_Id")
+    private Operation operation;
+
 }

@@ -2,12 +2,15 @@ package tn.esprit.gestionbancaire.services.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import tn.esprit.gestionbancaire.enums.OperationStatus;
 import tn.esprit.gestionbancaire.model.Operation;
 import tn.esprit.gestionbancaire.repository.OperationRepository;
 import tn.esprit.gestionbancaire.services.IOperationService;
 
 import java.util.List;
+import java.util.stream.Collectors;
+@Service
 @Slf4j
 public class OperationServiceImpl implements IOperationService {
     @Autowired
@@ -30,13 +33,15 @@ public class OperationServiceImpl implements IOperationService {
     }
 
     @Override
-    public List<Operation> getAllOperationByAccount(int accountNumber) {
+    public List<Operation> getAllOperationByAccount(long accountNumber) {
         // TODO
-        return null;
+        return operationRepository.findAll().stream()
+                .filter(x->x.getAccount().getId()==accountNumber)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<Operation> getAllOperationByAccountAndStatus(int accountNumber, OperationStatus operationStatus) {
+    public List<Operation> getAllOperationByAccountAndStatus(long accountNumber, OperationStatus operationStatus) {
         // TODO
         return null;
     }
