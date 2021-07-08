@@ -119,7 +119,8 @@ public class CreditSimulateurServiceImpl implements CreditSimulateurService {
         if (selfFinancing < vehicleAmout * MIN_SELF_FINANCING) {
             log.error("Insufficient Self Financing", selfFinancing);
             log.error("Self Financing should be >= ",vehicleAmout * 0.20);
-            throw new InvalidOperationException("Self Financing must be >= 20% of vehicle Amout !!", ErrorCodes.CREDIT_SIMILATEUR_SELF_FINANCING_INSUFFICIENT);
+            throw new InvalidOperationException("Self Financing must be >= 20% of vehicle Amout \n Min Amount = \n "
+            + vehicleAmout * 0.20 + "!!", ErrorCodes.CREDIT_SIMILATEUR_SELF_FINANCING_INSUFFICIENT);
         }
         if (vehicleFiscalPower <= 0 ){
             log.error("Invalid vehicle FiscalPower", vehicleFiscalPower);

@@ -49,12 +49,19 @@ public interface CreditApi {
     })
     void deleteCredit(@PathVariable("idCredit") Integer idCredit);
 
-    @GetMapping(value = APP_ROOT + "/credits/{archived}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = APP_ROOT + "/credits/", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Get all credits by archive", notes = "This methode get all credits by archive ", responseContainer = "List<Credit>")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "List of credits / Void list")
     })
-    List<Credit> findAllByArchived(@PathVariable("archived") Boolean archived);
+    List<Credit> findAllByArchived(@RequestParam("archived") Boolean archived);
+
+    @GetMapping(value = APP_ROOT + "/credits/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Get all credits by user id", notes = "This methode get all credits by id ", responseContainer = "List<Credit>")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "List of credits / Void list")
+    })
+    List<Credit> findAllByUser(@PathVariable("id") Integer id);
 
     @GetMapping(value = APP_ROOT + "/credits/all", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Get all credits", notes = "This methode get all credit ", responseContainer = "List<Credit>")
@@ -68,6 +75,8 @@ public interface CreditApi {
             @ApiResponse(code = 200, message = "List of credits / Void list")
     })
     List<Credit> findAllByStatus(@RequestParam("status") CreditStatus status);
+
+
 
     @GetMapping(value = APP_ROOT + "/credits/addnote/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Add note to credit note", notes = "This methode Add note to credit note ", responseContainer = "List<String>")

@@ -14,7 +14,7 @@ public interface CreditService {
 
     List<Credit> findAll();
 
-    List<Credit> findCreditHistory(Integer id);
+    List<Credit> findAllByUser(Integer id);
 
     List<Credit> findAllByCreditStatus(CreditStatus creditStatus);
 

@@ -2,6 +2,7 @@ package tn.esprit.gestionbancaire.services.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import tn.esprit.gestionbancaire.enums.AdministrativeDocumentType;
@@ -14,13 +15,12 @@ import tn.esprit.gestionbancaire.model.Credit;
 import tn.esprit.gestionbancaire.enums.CreditStatus;
 import tn.esprit.gestionbancaire.repository.CreditRepository;
 import tn.esprit.gestionbancaire.services.CreditService;
+import tn.esprit.gestionbancaire.services.CreditSimulateurService;
 import tn.esprit.gestionbancaire.validator.CreditValidator;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -28,11 +28,13 @@ import java.util.stream.Stream;
 @Slf4j
 public class CreditServiceImpl implements CreditService {
 
-
     private CreditRepository creditRepository;
+    private CreditSimulateurService creditSimulateurService;
     @Autowired
-    public CreditServiceImpl(CreditRepository creditRepository) {
+    public CreditServiceImpl(CreditRepository creditRepository,
+                             @Lazy CreditSimulateurService creditSimulateurService) {
         this.creditRepository = creditRepository;
+        this.creditSimulateurService = creditSimulateurService;
     }
 
 
@@ -50,19 +52,39 @@ public class CreditServiceImpl implements CreditService {
 
     @Override
     public Credit updateCreditStatus(Integer idCredit, CreditStatus creditStatus) {
+         
         checkIdCredit(idCredit);
         if (!StringUtils.hasLength(String.valueOf(creditStatus))) {
             log.error("Credit status is NULL");
             throw new InvalidOperationException("IS not allowed to chagne status to null",
                     ErrorCodes.CREDIT_NON_MODIFIABLE);
         }
-        if(creditStatus.equals(CreditStatus.ACCEPTED) || creditStatus.equals(CreditStatus.REFUSED)){
+        if(creditStatus.equals(CreditStatus.ACCEPTED)){
+            Map<Integer,Double> similation = new HashMap<>();
             Credit credit = checkCreditStatus(idCredit);
             credit.setCreditStatus(creditStatus);
             credit.setArchived(true);
             List<String> notes = credit.getNotes();
             notes.add("Your Credit Request Now is :" + creditStatus);
             credit.setNotes(notes);
+            credit.setLastModifiedDate(Instant.now());
+
+            if( credit.getCreditTemplate().getCreditType().equals("Vehicle") ){
+                 similation = creditSimulateurService.vehicleCredit(credit.getAmount(),credit.getVehicleFiscalPower(),credit.getSelfFinancing(),credit.getRepaymentPeriod());
+            }
+            log.info(""+ similation);
+            //call operation service
+            //send email to client
+        }
+        if(creditStatus.equals(CreditStatus.REFUSED)){
+            Credit credit = checkCreditStatus(idCredit);
+            credit.setCreditStatus(creditStatus);
+            credit.setArchived(true);
+            List<String> notes = credit.getNotes();
+            notes.add("Your Credit Request Now is :" + creditStatus);
+            credit.setNotes(notes);
+            credit.setLastModifiedDate(Instant.now());
+            //send email to client
         }
 
         Credit credit = checkCreditStatus(idCredit);
@@ -71,6 +93,7 @@ public class CreditServiceImpl implements CreditService {
         notes.add("Your Credit Request Now is " + creditStatus);
         credit.setNotes(notes);
         credit.setLastModifiedDate(Instant.now());
+        //send email to client
         return creditRepository.save(credit);
     }
 
@@ -96,13 +119,14 @@ public class CreditServiceImpl implements CreditService {
     }
 
     @Override
+    public List<Credit> findAllByUser(Integer id) {
+        return creditRepository.findAllByUser(id);
+    }
+
+    @Override
     public List<Credit> findAllNotArchived(Boolean archived) {
         return creditRepository.findAllByArchived(archived).stream()
                 .collect(Collectors.toList());
-    }
-    @Override
-    public List<Credit> findCreditHistory(Integer id) {
-        return null;
     }
 
     @Override

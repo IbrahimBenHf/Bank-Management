@@ -22,6 +22,17 @@ import java.util.List;
 @Table(name = "credit")
 public class Credit extends AbstractEntity {
 
+    @Column(name = "amount", nullable = false)
+    private double amount;
+
+    @Column(name = "repaymentperiod" , nullable = false)
+    private int repaymentPeriod;
+
+    @Column(name = "vehiclefiscalpower")
+    private int vehicleFiscalPower;
+
+    @Column(name = "selffinancing")
+    private double selfFinancing;
 
     @ManyToOne
     private CreditTemplate creditTemplate;
@@ -49,25 +60,6 @@ public class Credit extends AbstractEntity {
     //@JsonIgnore
     @JoinColumn(name = "user")
     private User user;
-
-
-
-/*
-    @Column(name = "etatcredit")
-    @Enumerated(EnumType.STRING)
-    private EtatCredit etatCredit;
-
-    @ManyToOne
-    @JoinColumn(name = "iduser")
-    private User idUser;
-
-    @OneToOne
-    @JoinColumn(name = "creditTemplate", referencedColumnName = "code")
-    private CreditTemplate creditTemplate;
-
-    @Column(name = "datecredit")
-    private Instant dateCredit;
-*/
 
     public boolean isCreditClosed() {
         return (CreditStatus.ACCEPTED.equals(this.creditStatus) || CreditStatus.REFUSED.equals(this.creditStatus));

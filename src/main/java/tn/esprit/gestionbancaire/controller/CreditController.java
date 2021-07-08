@@ -53,6 +53,11 @@ public class CreditController implements CreditApi {
     }
 
     @Override
+    public List<Credit> findAllByUser(Integer id) {
+        return creditService.findAllByUser(id);
+    }
+
+    @Override
     public List<Credit> findAll() {
         return creditService.findAll();
     }
