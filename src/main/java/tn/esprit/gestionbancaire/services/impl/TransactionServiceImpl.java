@@ -72,12 +72,22 @@ public class TransactionServiceImpl implements ITransactionService {
     }
 
     @Override
+    public Integer countNegativeBalanceByClient(long idUser) {
+        return null;
+    }
+
+    @Override
     public Double getAllNegativeBalance() {
         return null;
     }
 
     @Override
     public List<Transaction> getMonthlyTransactions(Date date) {
+        return null;
+    }
+
+    @Override
+    public List<Transaction> getMonthlyTransactionsByClient(Date date) {
         return null;
     }
 

@@ -16,8 +16,13 @@ public enum ErrorCodes {
     UPDATE_PHOTO_EXCEPTION(14000),
     UNKNOWN_CONTEXT(14001),
     // ErrorCodesForCurrency&Operation&Transaction
-    TX_IS_NULL(2001),
-    TX_NOT_FOUND(2002)
+    TX_IS_NULL(22001),
+    TX_NOT_FOUND(22002),
+
+    OPERATION_NOT_FOUND(22011),
+    OPERATION_NOT_VALID(22012),
+    OPERATION_IS_NULL(22013),
+    OPERATION_NON_MODIFIABLE(22014)
     ;
 
     private int code;

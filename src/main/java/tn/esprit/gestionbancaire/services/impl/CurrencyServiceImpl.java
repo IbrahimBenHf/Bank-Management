@@ -8,6 +8,12 @@ import tn.esprit.gestionbancaire.exception.InvalidOperationException;
 import tn.esprit.gestionbancaire.model.Currency;
 import tn.esprit.gestionbancaire.repository.CurrencyRepository;
 import tn.esprit.gestionbancaire.services.ICurrencyService;
+
+import javax.money.CurrencyUnit;
+import javax.money.Monetary;
+import javax.money.MonetaryAmount;
+import javax.money.convert.CurrencyConversion;
+import javax.money.convert.MonetaryConversions;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -44,9 +50,7 @@ public class CurrencyServiceImpl implements ICurrencyService {
 
     @Override
     public List<Currency> findAvailableToExchange() {
-        return currencyRepository.findAll().stream()
-                .filter(x-> x.getSellValue()!= null &&  x.getSellValue().compareTo(BigDecimal.ZERO)!=0)
-                .collect(Collectors.toList());
+        return null;
     }
 
     @Override
@@ -68,6 +72,19 @@ public class CurrencyServiceImpl implements ICurrencyService {
             throw new InvalidOperationException("Symbol is null",
                     ErrorCodes.CREDIT_IS_NULL);
         }
+    }
+
+    public MonetaryAmount convert(String currentCurrency, String targetCurrency, BigDecimal amount){
+
+        CurrencyUnit currentCurrencyUnit = Monetary.getCurrency(currentCurrency);
+        CurrencyUnit targetCurrencyUnit = Monetary.getCurrency(targetCurrency);
+
+        MonetaryAmount current = Monetary.getDefaultAmountFactory().setCurrency(currentCurrencyUnit)
+                .setNumber(amount).create();
+        CurrencyConversion conversion = MonetaryConversions.getConversion(targetCurrencyUnit);
+        MonetaryAmount convertedAmount = current.with(conversion);
+        return convertedAmount;
+
     }
 
 }

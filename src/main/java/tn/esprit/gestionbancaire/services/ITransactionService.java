@@ -21,9 +21,15 @@ public interface ITransactionService {
 
     Integer countNegativeTransactionBalanceByClient(long idUser);
 
+    // gdech men mara jbed fi el rouge
+
+    Integer countNegativeBalanceByClient(long idUser);
+
     Double getAllNegativeBalance();
 
     List<Transaction> getMonthlyTransactions(Date date);
+
+    List<Transaction> getMonthlyTransactionsByClient(Date date);
 
     Transaction RevertTransaction(Integer id);
 
