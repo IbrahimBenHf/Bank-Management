@@ -16,6 +16,7 @@ public class Transaction extends AbstractEntity implements Serializable {
     private Date date;
     private TransactionType transactionType;
     private Boolean isNegativeTx;
+    private Boolean isRevertedTransaction;
 
     @ManyToOne
     @JoinColumn(name = "Operation_Id")

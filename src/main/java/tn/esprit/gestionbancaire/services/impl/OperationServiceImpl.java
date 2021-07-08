@@ -21,6 +21,11 @@ public class OperationServiceImpl implements IOperationService {
     }
 
     @Override
+    public Operation findOperationById(Integer id) {
+        return null;
+    }
+
+    @Override
     public Operation updateOperationStatus(Integer IdOperation, OperationStatus operationStatus) {
         Operation o = operationRepository.getById(IdOperation);
         o.setOperationStatus(operationStatus);

@@ -1,7 +1,12 @@
 package tn.esprit.gestionbancaire.services.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import tn.esprit.gestionbancaire.enums.TransactionType;
+import tn.esprit.gestionbancaire.exception.EntityNotFoundException;
+import tn.esprit.gestionbancaire.exception.ErrorCodes;
+import tn.esprit.gestionbancaire.exception.InvalidOperationException;
 import tn.esprit.gestionbancaire.model.Operation;
 import tn.esprit.gestionbancaire.model.Transaction;
 import tn.esprit.gestionbancaire.repository.TransactionRepository;
@@ -15,7 +20,8 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-// TODO
+@Slf4j
+@Service
 public class TransactionServiceImpl implements ITransactionService {
     @Autowired
     TransactionRepository transactionRepository;
@@ -26,6 +32,15 @@ public class TransactionServiceImpl implements ITransactionService {
     @Override
     public Transaction save(Transaction transaction) {
         return transactionRepository.save(transaction);
+    }
+
+    @Override
+    public Transaction getTransactionById(Integer id) {
+        return transactionRepository.findById(id).orElseThrow(() ->
+                new EntityNotFoundException(
+                        "There is no Transaction found with ID = " + id,
+                        ErrorCodes.TX_NOT_FOUND)
+        );
     }
 
     @Override
@@ -68,7 +83,22 @@ public class TransactionServiceImpl implements ITransactionService {
 
     @Override
     public Transaction RevertTransaction(Integer id) {
-        return null;
+        checkIdTransaction(id);
+        Transaction t = this.getTransactionById(id);
+        t.setIsRevertedTransaction(true);
+        Operation o = operationService.findOperationById(id);
+        //t.getIsNegativeTx()?
+        return t;
+
+    }
+
+
+    private void checkIdTransaction(Integer idTxt) {
+        if (idTxt == null) {
+            log.error("Transaction ID is NULL");
+            throw new InvalidOperationException("ID is null",
+                    ErrorCodes.TX_IS_NULL);
+        }
     }
 
 

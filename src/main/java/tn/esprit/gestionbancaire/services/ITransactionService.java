@@ -11,6 +11,8 @@ public interface ITransactionService {
 
     Transaction save(Transaction transaction);
 
+    Transaction getTransactionById(Integer id);
+
     List<Transaction> getTransactionByType(TransactionType transactionType);
 
     List<Transaction> getTransactionByOperation(long  idOperation, Boolean isNegative);

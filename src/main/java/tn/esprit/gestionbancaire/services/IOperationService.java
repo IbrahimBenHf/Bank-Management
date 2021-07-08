@@ -9,6 +9,8 @@ public interface IOperationService {
 
     Operation save(Operation operation);
 
+    Operation findOperationById(Integer id);
+
     Operation updateOperationStatus(Integer idOperation, OperationStatus operationStatus);
 
     List<Operation> getArchivedOperation(boolean inArchived);
