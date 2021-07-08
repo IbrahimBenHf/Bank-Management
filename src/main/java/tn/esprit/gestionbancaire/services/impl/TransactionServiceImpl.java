@@ -7,6 +7,7 @@ import tn.esprit.gestionbancaire.model.Transaction;
 import tn.esprit.gestionbancaire.repository.TransactionRepository;
 import tn.esprit.gestionbancaire.services.IOperationService;
 import tn.esprit.gestionbancaire.services.ITransactionService;
+import tn.esprit.gestionbancaire.services.IUserService;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -19,6 +20,7 @@ public class TransactionServiceImpl implements ITransactionService {
     @Autowired
     TransactionRepository transactionRepository;
     IOperationService operationService;
+    IUserService userService;
 
 
     @Override
@@ -49,7 +51,7 @@ public class TransactionServiceImpl implements ITransactionService {
     }
 
     @Override
-    public Integer countNegativeTransactionBalanceByUser(long idUser) {
+    public Integer countNegativeTransactionBalanceByClient(long idClient) {
         //TODO
     return null;
     }

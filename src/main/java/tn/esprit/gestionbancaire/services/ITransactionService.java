@@ -17,7 +17,7 @@ public interface ITransactionService {
 
     BigDecimal getYearlyNegBalanceByUser(long idUser, int year);
 
-    Integer countNegativeTransactionBalanceByUser(long idUser);
+    Integer countNegativeTransactionBalanceByClient(long idUser);
 
     Double getAllNegativeBalance();
 

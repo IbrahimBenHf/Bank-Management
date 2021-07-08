@@ -3,7 +3,7 @@ package tn.esprit.gestionbancaire.model;
 import lombok.Data;
 import tn.esprit.gestionbancaire.enums.OperationStatus;
 import tn.esprit.gestionbancaire.enums.OperationSubType;
-import tn.esprit.gestionbancaire.enums.Operationtype;
+import tn.esprit.gestionbancaire.enums.OperationType;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -20,7 +20,7 @@ class Operation extends AbstractEntity implements Serializable {
     private Date date;
     private BigDecimal amount;
     private Boolean isInternal;
-    private Operationtype operationtype;
+    private OperationType operationtype;
     private OperationSubType operationSubType;
     private OperationStatus  operationStatus;
     private Boolean isArchived;

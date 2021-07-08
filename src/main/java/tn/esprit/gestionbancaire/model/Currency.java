@@ -20,7 +20,5 @@ public class Currency implements Serializable {
     private Integer rounding;
     private String code;
     private boolean isCryptoCurrency;
-    private BigDecimal sellValue;
-    private BigDecimal buyValue;
 
 }
