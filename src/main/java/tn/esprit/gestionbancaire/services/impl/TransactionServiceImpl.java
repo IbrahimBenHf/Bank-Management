@@ -20,6 +20,7 @@ public class TransactionServiceImpl implements ITransactionService {
     TransactionRepository transactionRepository;
     IOperationService operationService;
 
+
     @Override
     public Transaction save(Transaction transaction) {
         return transactionRepository.save(transaction);
@@ -63,6 +64,10 @@ public class TransactionServiceImpl implements ITransactionService {
         return null;
     }
 
+    @Override
+    public Transaction RevertTransaction(Integer id) {
+        return null;
+    }
 
 
 }

@@ -22,19 +22,18 @@ public class OperationServiceImpl implements IOperationService {
 
     @Override
     public Operation updateOperationStatus(Integer IdOperation, OperationStatus operationStatus) {
-        // TODO
-        return null;
+        Operation o = operationRepository.getById(IdOperation);
+        o.setOperationStatus(operationStatus);
+        return o;
     }
 
     @Override
-    public List<Operation> getArchivedOperation(boolean inArchived) {
-        // TODO
-        return null;
+    public List<Operation> getArchivedOperation(boolean isArchived) {
+        return operationRepository.findAll().stream().filter(x->x.getIsArchived().equals(isArchived)).collect(Collectors.toList());
     }
 
     @Override
     public List<Operation> getAllOperationByAccount(long accountNumber) {
-        // TODO
         return operationRepository.findAll().stream()
                 .filter(x->x.getAccount().getId()==accountNumber)
                 .collect(Collectors.toList());

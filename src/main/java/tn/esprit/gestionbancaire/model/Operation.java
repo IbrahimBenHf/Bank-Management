@@ -1,6 +1,7 @@
 package tn.esprit.gestionbancaire.model;
 
 import lombok.Data;
+import tn.esprit.gestionbancaire.enums.OperationStatus;
 import tn.esprit.gestionbancaire.enums.OperationSubType;
 import tn.esprit.gestionbancaire.enums.Operationtype;
 
@@ -21,6 +22,8 @@ class Operation extends AbstractEntity implements Serializable {
     private Boolean isInternal;
     private Operationtype operationtype;
     private OperationSubType operationSubType;
+    private OperationStatus  operationStatus;
+    private Boolean isArchived;
     @ManyToOne
     @JoinColumn(name = "Account_Id")
     private Account account;

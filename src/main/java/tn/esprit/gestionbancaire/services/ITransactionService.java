@@ -23,6 +23,8 @@ public interface ITransactionService {
 
     List<Transaction> getMonthlyTransactions(Date date);
 
+    Transaction RevertTransaction(Integer id);
+
 
 
 }
