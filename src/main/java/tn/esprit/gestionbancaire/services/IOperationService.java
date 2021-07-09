@@ -18,4 +18,6 @@ public interface IOperationService {
     List<Operation> getAllOperationByAccount(long accountNumber);
 
     List<Operation> getAllOperationByAccountAndStatus(long accountNumber, OperationStatus operationStatus);
+
+    Void revertOperation(Operation operation, Boolean isNegativeTx, boolean b);
 }

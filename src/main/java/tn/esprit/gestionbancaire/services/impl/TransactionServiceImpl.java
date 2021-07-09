@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import tn.esprit.gestionbancaire.enums.TransactionType;
 import tn.esprit.gestionbancaire.exception.EntityNotFoundException;
 import tn.esprit.gestionbancaire.exception.ErrorCodes;
+import tn.esprit.gestionbancaire.exception.InvalidEntityException;
 import tn.esprit.gestionbancaire.exception.InvalidOperationException;
 import tn.esprit.gestionbancaire.model.Operation;
 import tn.esprit.gestionbancaire.model.Transaction;
@@ -13,6 +14,7 @@ import tn.esprit.gestionbancaire.repository.TransactionRepository;
 import tn.esprit.gestionbancaire.services.IOperationService;
 import tn.esprit.gestionbancaire.services.ITransactionService;
 import tn.esprit.gestionbancaire.services.IUserService;
+import tn.esprit.gestionbancaire.validator.TransactionValidator;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -31,6 +33,11 @@ public class TransactionServiceImpl implements ITransactionService {
 
     @Override
     public Transaction save(Transaction transaction) {
+        List<String> errors = TransactionValidator.validate(transaction);
+        if (!errors.isEmpty()) {
+            log.error("transaction is not valid {}", transaction);
+            throw new InvalidEntityException("Operation is not valid", ErrorCodes.OPERATION_NOT_VALID, errors);
+        }
         return transactionRepository.save(transaction);
     }
 
@@ -46,21 +53,21 @@ public class TransactionServiceImpl implements ITransactionService {
     @Override
     public List<Transaction> getTransactionByType(TransactionType transactionType) {
         return transactionRepository.findAll().stream()
-                .filter(x->x.getTransactionType().equals(transactionType)).collect(Collectors.toList());
+                .filter(x -> x.getTransactionType().equals(transactionType)).collect(Collectors.toList());
     }
 
     @Override
     public List<Transaction> getTransactionByOperation(long idOperation, Boolean isNegative) {
-        return transactionRepository.findAll().stream().filter(x->x.getOperation().getId()==idOperation).collect(Collectors.toList());
+        return transactionRepository.findAll().stream().filter(x -> x.getOperation().getId() == idOperation).collect(Collectors.toList());
     }
 
     @Override
     public BigDecimal getYearlyNegBalanceByUser(long idUser, int year) {
 
         List<Operation> OpByUser = operationService.getAllOperationByAccount(idUser)
-                .stream().filter(x->x.getDate().getYear()== year).collect(Collectors.toList());
+                .stream().filter(x -> x.getDate().getYear() == year).collect(Collectors.toList());
         BigDecimal a = BigDecimal.ZERO;
-        OpByUser.stream().forEach( operation -> this.getTransactionByOperation(operation.getId(), true)
+        OpByUser.stream().forEach(operation -> this.getTransactionByOperation(operation.getId(), true)
                 .stream().forEach((Consumer<? super Transaction>) a.add(operation.getAmount())));
         return a;
     }
@@ -68,7 +75,7 @@ public class TransactionServiceImpl implements ITransactionService {
     @Override
     public Integer countNegativeTransactionBalanceByClient(long idClient) {
         //TODO
-    return null;
+        return null;
     }
 
     @Override
@@ -83,7 +90,7 @@ public class TransactionServiceImpl implements ITransactionService {
 
     @Override
     public List<Transaction> getMonthlyTransactions(Date date) {
-        return null;
+        return  transactionRepository.findAll().stream().filter(x -> x.getDate().getMonth() == (date.getMonth())).collect(Collectors.toList());
     }
 
     @Override
@@ -97,7 +104,7 @@ public class TransactionServiceImpl implements ITransactionService {
         Transaction t = this.getTransactionById(id);
         t.setIsRevertedTransaction(true);
         Operation o = operationService.findOperationById(id);
-        //t.getIsNegativeTx()?
+        operationService.revertOperation(t.getOperation(), t.getIsNegativeTx(), !t.getTransactionType().equals(TransactionType.CREDIT));
         return t;
 
     }

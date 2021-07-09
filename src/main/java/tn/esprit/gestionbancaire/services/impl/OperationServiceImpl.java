@@ -17,11 +17,13 @@ import tn.esprit.gestionbancaire.validator.OperationValidator;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
+
 @Service
 @Slf4j
 public class OperationServiceImpl implements IOperationService {
     @Autowired
     OperationRepository operationRepository;
+
     @Override
     public Operation save(Operation operation) {
         List<String> errors = OperationValidator.validate(operation);
@@ -34,20 +36,20 @@ public class OperationServiceImpl implements IOperationService {
     }
 
     @Override
-        public Operation findOperationById(Integer id) {
+    public Operation findOperationById(Integer id) {
         return operationRepository.findById(id).orElseThrow(
                 () ->
-        new EntityNotFoundException(
-                "There is no Operation found with ID = " + id,
-                ErrorCodes.OPERATION_NOT_FOUND
-        ));
+                        new EntityNotFoundException(
+                                "There is no Operation found with ID = " + id,
+                                ErrorCodes.OPERATION_NOT_FOUND
+                        ));
     }
 
     @Override
     public Operation updateOperationStatus(Integer IdOperation, OperationStatus operationStatus) {
         checkIdOperation(IdOperation);
         checkStatus(operationStatus);
-        if(operationStatus.equals(OperationStatus.EXECUTED) || operationStatus.equals(OperationStatus.CANCELLED)){
+        if (operationStatus.equals(OperationStatus.EXECUTED) || operationStatus.equals(OperationStatus.CANCELLED)) {
             Operation o = operationRepository.getById(IdOperation);
             o.setOperationStatus(operationStatus);
             return o;
@@ -58,20 +60,25 @@ public class OperationServiceImpl implements IOperationService {
 
     @Override
     public List<Operation> getArchivedOperation(boolean isArchived) {
-        return operationRepository.findAll().stream().filter(x->x.getIsArchived().equals(isArchived)).collect(Collectors.toList());
+        return operationRepository.findAll().stream().filter(x -> x.getIsArchived().equals(isArchived)).collect(Collectors.toList());
     }
 
     @Override
     public List<Operation> getAllOperationByAccount(long accountNumber) {
         return operationRepository.findAll().stream()
-                .filter(x->x.getAccount().getId()==accountNumber)
+                .filter(x -> x.getAccount().getId() == accountNumber)
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<Operation> getAllOperationByAccountAndStatus(long accountNumber, OperationStatus operationStatus) {
         Collection<Operation> operations = getAllOperationByAccount(accountNumber);
-        return operations.stream().filter(x-> x.getOperationStatus().equals(operationStatus)).collect(Collectors.toList());
+        return operations.stream().filter(x -> x.getOperationStatus().equals(operationStatus)).collect(Collectors.toList());
+    }
+
+    @Override
+    public Void revertOperation(Operation operation, Boolean isNegativeTx, boolean b) {
+        return null;
     }
 
     private void checkIdOperation(Integer idopt) {
@@ -82,7 +89,7 @@ public class OperationServiceImpl implements IOperationService {
         }
     }
 
-    private void checkStatus(OperationStatus operationStatus ){
+    private void checkStatus(OperationStatus operationStatus) {
         if (!StringUtils.hasLength(String.valueOf(operationStatus))) {
             log.error("Operation status is NULL");
             throw new InvalidOperationException("IS not allowed to chagne status to null",
