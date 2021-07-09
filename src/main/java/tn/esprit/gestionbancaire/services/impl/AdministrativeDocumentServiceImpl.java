@@ -82,6 +82,8 @@ public class AdministrativeDocumentServiceImpl implements AdministrativeDocument
         Optional<AdministrativeDocument> administrativeDocument = administrativeDocumentRepository.findById(id);
 
         if (administrativeDocument.isPresent()) {
+            administrativeDocument.get().setCredit(null);
+            administrativeDocumentRepository.save(administrativeDocument.get());
             administrativeDocumentRepository.deleteById(id);
         }
 

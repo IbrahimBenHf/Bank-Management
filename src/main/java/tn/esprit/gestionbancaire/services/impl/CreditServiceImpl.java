@@ -72,28 +72,29 @@ public class CreditServiceImpl implements CreditService {
             throw new InvalidOperationException("IS not allowed to chagne status to null",
                     ErrorCodes.CREDIT_NON_MODIFIABLE);
         }
+        Credit credit = checkCreditStatus(idCredit);
         if(creditStatus.equals(CreditStatus.ACCEPTED)){
             Map<Integer,Double> similation = new HashMap<>();
-            Credit credit = checkCreditStatus(idCredit);
-            credit.setCreditStatus(creditStatus);
-            credit.setArchived(true);
+            credit = checkCreditStatus(idCredit);
+
             List<String> notes = credit.getNotes();
             notes.add("Your Credit Request Now is :" + creditStatus);
             credit.setNotes(notes);
             credit.setLastModifiedDate(Instant.now());
 
-            if( credit.getCreditTemplate().getCreditType().equals("Vehicle") ){
+            if( credit.getCreditTemplate().getTitle().equals("Vehicle") ){
                  similation = creditSimulateurService.vehicleCredit(credit.getAmount(),credit.getVehicleFiscalPower(),credit.getSelfFinancing(),credit.getRepaymentPeriod());
-            } else if ( credit.getCreditTemplate().getCreditType().equals("Personal") ){
+            } else if ( credit.getCreditTemplate().getTitle().equals("Personal") ){
                 similation = creditSimulateurService.prsonalCredit(credit.getAmount(),credit.getRepaymentPeriod());
             }
             log.info(""+ similation);
             //call operation service
             //send email to client
+            credit.setCreditStatus(creditStatus);
+            credit.setArchived(true);
             mailService.creditNotify(credit,creditStatus);
-        }
-        if(creditStatus.equals(CreditStatus.REFUSED)){
-            Credit credit = checkCreditStatus(idCredit);
+        }else if(creditStatus.equals(CreditStatus.REFUSED)){
+            credit = checkCreditStatus(idCredit);
             credit.setCreditStatus(creditStatus);
             credit.setArchived(true);
             List<String> notes = credit.getNotes();
@@ -102,16 +103,18 @@ public class CreditServiceImpl implements CreditService {
             credit.setLastModifiedDate(Instant.now());
             //send email to client
             mailService.creditNotify(credit,creditStatus);
+        }else {
+            credit = checkCreditStatus(idCredit);
+            credit.setCreditStatus(creditStatus);
+            List<String> notes = credit.getNotes();
+            notes.add("Your Credit Request Now is " + creditStatus);
+            credit.setNotes(notes);
+            credit.setLastModifiedDate(Instant.now());
+            //send email to client
+            mailService.creditNotify(credit,creditStatus);
         }
 
-        Credit credit = checkCreditStatus(idCredit);
-        credit.setCreditStatus(creditStatus);
-        List<String> notes = credit.getNotes();
-        notes.add("Your Credit Request Now is " + creditStatus);
-        credit.setNotes(notes);
-        credit.setLastModifiedDate(Instant.now());
-        //send email to client
-        mailService.creditNotify(credit,creditStatus);
+
         return creditRepository.save(credit);
     }
 
@@ -199,11 +202,11 @@ public class CreditServiceImpl implements CreditService {
             Instant now = Instant.now();
             Instant creationDate = credit.getCreationDate();
             long days = creationDate.until(now, ChronoUnit.DAYS);
-            if ( credit.getCreditTemplate().getCreditType().equals("Vehicle")){
+            if ( credit.getCreditTemplate().getTitle().equals("Vehicle")){
                 doctypes = Stream.of(AdministrativeDocumentType.values())
                         .map(Enum::name)
                         .collect(Collectors.toList());
-            }else if (credit.getCreditTemplate().getCreditType().equals("Personal") ){
+            }else if (credit.getCreditTemplate().getTitle().equals("Personal") ){
                 doctypes = Stream.of(AdministrativeDocumentType.values())
                         .map(Enum::name)
                         .collect(Collectors.toList());
