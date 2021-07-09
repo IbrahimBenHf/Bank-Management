@@ -37,7 +37,7 @@ services:
 networks:
   pi_project:
     driver: bridge
-      ipam:
+    ipam:
       config:
         - subnet: 172.20.0.0/24
 volumes:
