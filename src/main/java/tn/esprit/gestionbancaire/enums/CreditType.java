@@ -4,9 +4,10 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 import java.io.Serializable;
 
-public enum AccountType implements Serializable {
-    CURRENT,
-    SAVINGS;
+public enum CreditType implements Serializable {
+    CONSUMPTION,
+    STUDY,
+    REAL_ESTATE;
 
     @JsonValue
     public String getType() {

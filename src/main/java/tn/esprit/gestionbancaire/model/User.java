@@ -39,17 +39,17 @@ public class User extends AbstractEntity{
 	@Column(name = "active")
 	private Boolean active;
 
-	
+
     @OneToOne(fetch = FetchType.EAGER, optional = true)
     @JoinColumn(name = "client_id", nullable = true)
 
 	private Client client;
-    
+
 	@Column(name = "roles")
 	private String roles;
 
 	// getters and setters
-	
+
 	public int getAge() {
 		Calendar a = getCalendar(client.getBirthDate());
 		Calendar b = getCalendar(new Date());
@@ -68,6 +68,6 @@ public class User extends AbstractEntity{
 	}
 
 
-	
+
 
 }

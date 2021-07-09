@@ -2,14 +2,13 @@ package tn.esprit.gestionbancaire.enums;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 
-import java.io.Serializable;
-
-public enum AccountType implements Serializable {
-    CURRENT,
-    SAVINGS;
+public enum AccountRequestStatus {
+    OPEN,
+    IN_PROGRESS,
+    DONE;
 
     @JsonValue
-    public String getType() {
+    public String getStatus() {
         return this.name();
     }
 }
