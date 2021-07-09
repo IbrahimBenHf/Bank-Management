@@ -9,7 +9,7 @@ public interface ReclamationCommentService {
     ReclamationComment findById(Integer idReclamation);
     List<ReclamationComment> findAll();
     ReclamationComment save(ReclamationComment reclamation);
-    ReclamationComment update(ReclamationComment reclamationComment);
+    ReclamationComment update(Integer id,ReclamationComment reclamationComment);
     void delete(Integer id);
 
 }

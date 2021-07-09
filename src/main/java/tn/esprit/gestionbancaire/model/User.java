@@ -1,50 +1,83 @@
 package tn.esprit.gestionbancaire.model;
 
+import static java.util.Calendar.DATE;
+import static java.util.Calendar.MONTH;
+import static java.util.Calendar.YEAR;
+
+import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
-import tn.esprit.gestionbancaire.enums.CivilState;
-import tn.esprit.gestionbancaire.enums.Sexe;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@ToString
 @Table(name = "user")
-public class User {
+public class User extends AbstractEntity{
 
-	@Id
-	@GeneratedValue
-	private Long id;
-
-	@Column(name = "first_name")
-	private String firstName;
-
-	@Column(name = "last_name")
-	private String lastName;
-
-	@Column(name = "email_address")
-	private String emailAddress;
+	@Column(name = "username")
+	private String userName;
 
 	@Column(name = "password")
 	private String password;
 
-	@Column(name = "cin")
-	private int cin;
+	@Column(name = "active")
+	private Boolean active;
 
-	@Column(name = "birth_date")
-	private Date birthDate;
+	@OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@Fetch(value = FetchMode.SUBSELECT)
+	@JsonManagedReference
+	private List<Credit> credits;
 
-	@Column(name = "phone_number")
-	private long phoneNumber;
+    @OneToOne(fetch = FetchType.EAGER, optional = true)
+    @JoinColumn(name = "client_id", nullable = true)
 
-	@Column(name = "sexe")
-	private Sexe sexe;
+	private Client client;
 
-	@Column(name = "civil_state")
-	private CivilState civilState;
+	@Column(name = "roles")
+	private String roles;
 
+	public User(String userName, String password, Boolean active, Client client, String roles) {
+		this.userName = userName;
+		this.password = password;
+		this.active = active;
+		this.client = client;
+		this.roles = roles;
+	}
 	// getters and setters
+
+	public int getAge() {
+		Calendar a = getCalendar(client.getBirthDate());
+		Calendar b = getCalendar(new Date());
+		int diff = b.get(YEAR) - a.get(YEAR);
+		if (a.get(MONTH) > b.get(MONTH) || (a.get(MONTH) == b.get(MONTH) && a.get(DATE) > b.get(DATE))) {
+			diff--;
+		}
+		return diff;
+
+	}
+
+	public static Calendar getCalendar(Date date) {
+		Calendar cal = Calendar.getInstance(Locale.US);
+		cal.setTime(date);
+		return cal;
+	}
+
+
+
+
 }

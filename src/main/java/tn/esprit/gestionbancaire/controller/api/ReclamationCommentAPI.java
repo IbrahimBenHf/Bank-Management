@@ -30,7 +30,7 @@ public interface ReclamationCommentAPI {
             @ApiResponse(code = 200, message = "ReclamationComment modified "),
             @ApiResponse(code = 400, message = "ReclamationComment is invalid")
     })
-    ResponseEntity<ReclamationComment> updateReclamationComment(@PathVariable("idReclamationComment") Integer idReclamationComment);
+    ResponseEntity<ReclamationComment> updateReclamationComment(@PathVariable("idReclamationComment") Integer idReclamationComment, @RequestBody ReclamationComment reclamationComment);
 
     @DeleteMapping(APP_ROOT + "/ReclamationComment/delete/ReclamationComment/{idReclamationComment}")
     @ApiOperation(value = "Delete ReclamationComment", notes = "This methode can delete ReclamationComment", response = ReclamationComment.class)

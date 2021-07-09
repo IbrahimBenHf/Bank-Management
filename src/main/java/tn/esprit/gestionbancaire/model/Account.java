@@ -6,6 +6,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -32,7 +34,7 @@ public abstract class Account implements Serializable {
     @Column(name = "creationDate", nullable = false, updatable = false)
     private Date creationDate;
 
-    private float balance;
+    private BigDecimal balance;
 
     @ManyToOne
     private AccountTemplate accountTemplate;
@@ -43,4 +45,6 @@ public abstract class Account implements Serializable {
     @ManyToOne
     private Client client;
 
+    @OneToMany(mappedBy="account")
+    private Collection<Operation> operations;
 }

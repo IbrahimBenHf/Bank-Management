@@ -19,6 +19,11 @@ public class ClientServiceImpl implements ClientService {
         this.clientRepository = clientRepository;
     }
 
+    public Client save(Client client) {
+        // TODO Auto-generated method stub
+        return clientRepository.save(client);
+    }
+
     @Override
     public Client findById(long id) {
         return clientRepository.findById(id).orElseThrow(() ->

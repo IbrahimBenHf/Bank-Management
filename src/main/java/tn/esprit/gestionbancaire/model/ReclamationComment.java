@@ -1,6 +1,8 @@
 package tn.esprit.gestionbancaire.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -16,7 +18,9 @@ import javax.persistence.*;
 @Table(name = "reclamation_comment")
 public class ReclamationComment extends AbstractEntity {
 
-    @ManyToOne(optional = false)
+    @ManyToOne
+    //@JsonIgnore
+    @JsonBackReference
     @JoinColumn(name = "reclamation")
     private Reclamation reclamation;
 
