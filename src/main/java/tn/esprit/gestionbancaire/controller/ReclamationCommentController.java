@@ -26,8 +26,8 @@ public class ReclamationCommentController implements ReclamationCommentAPI {
     }
 
     @Override
-    public ResponseEntity<ReclamationComment> updateReclamationComment(Integer idReclamationComment) {
-        return null;
+    public ResponseEntity<ReclamationComment> updateReclamationComment(Integer idReclamationComment,ReclamationComment reclamationComment) {
+        return ResponseEntity.ok(reclamationCommentService.update(idReclamationComment,reclamationComment));
     }
 
     @Override
