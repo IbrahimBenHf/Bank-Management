@@ -3,8 +3,7 @@ package tn.esprit.gestionbancaire.model;
 import lombok.*;
 import tn.esprit.gestionbancaire.enums.AccountType;
 
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,8 +30,10 @@ public class AccountTemplate extends Product {
 
     private long bonusRate;
 
-    @ManyToOne
-    private Currency currency;
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "requiredPapers", joinColumns = @JoinColumn(name = "id"))
+    @Column(name = "requiredPaper")
+    private List<String> requiredPapers;
 
     public static List<String> getNullableAttributes(){
         return new ArrayList<>(List.of("advantages", "currency"));
