@@ -28,10 +28,10 @@ public class Credit extends AbstractEntity {
     @Column(name = "repaymentperiod" , nullable = false)
     private int repaymentPeriod;
 
-    @Column(name = "vehiclefiscalpower")
+    @Column(name = "vehiclefiscalpower" , nullable = false)
     private int vehicleFiscalPower;
 
-    @Column(name = "selffinancing")
+    @Column(name = "selffinancing" , nullable = false)
     private double selfFinancing;
 
     @ManyToOne

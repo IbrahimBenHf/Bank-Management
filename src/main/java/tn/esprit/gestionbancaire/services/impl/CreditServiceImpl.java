@@ -239,13 +239,13 @@ public class CreditServiceImpl implements CreditService {
 
     @Override
     public Map<String, Integer> mostOpenedCreditByType() {
-        Map<String, Integer> map = new HashMap<>();
+        Map<String, Integer> map = new LinkedHashMap<>();
         Integer vehicleCredit = creditRepository.countCreditByCreditTemplateTitle("Vehicle");
         Integer prsonalCredit = creditRepository.countCreditByCreditTemplateTitle("Personal");
         map.put("Vehicle",vehicleCredit);
         map.put("Personal",prsonalCredit);
         if( vehicleCredit == prsonalCredit ){
-            map.put("Personal are equals",prsonalCredit);
+            map.put("Personal and Vehicle are equals ",prsonalCredit);
         }else if (vehicleCredit > prsonalCredit){
             map.put("Vehicle credit is the most used credit ",vehicleCredit);
         }else{
