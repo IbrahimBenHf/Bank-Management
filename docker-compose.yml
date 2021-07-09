@@ -19,8 +19,8 @@ services:
       - '3306'
       # Where our data will be persisted
     networks:
-      mini_project:
-        ipv4_address: "172.20.0.2"
+      pi_project:
+#        ipv4_address: "172.20.0.2"
     volumes:
       - my-db:/var/lib/mysql
   gestionBancaire:
@@ -33,12 +33,12 @@ services:
       - db
     networks:
       pi_project:
-        ipv4_address: "172.20.0.3"
+#        ipv4_address: "172.20.0.3"
 networks:
   pi_project:
     driver: bridge
-    ipam:
-      config:
-        - subnet: 172.20.0.0/24
+#    ipam:
+#      config:
+#        - subnet: 172.20.0.0/24
 volumes:
   my-db:
