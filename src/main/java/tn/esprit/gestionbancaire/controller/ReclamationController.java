@@ -39,6 +39,11 @@ public class ReclamationController implements ReclamationAPI {
     }
 
     @Override
+    public List<Reclamation> findAllByStatus(ReclamationStatus reclamationStatus) {
+        return reclamationService.findAllByStatus(reclamationStatus);
+    }
+
+    @Override
     public List<Reclamation> findAll() {
         return reclamationService.findAll();
     }

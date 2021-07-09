@@ -64,6 +64,10 @@ public class ReclamationServiceImpl implements ReclamationService {
         return reclamationRepository.findAll();
     }
 
+    public List<Reclamation> findAllByStatus(ReclamationStatus reclamationStatus){
+        return reclamationRepository.findAllByStatus(reclamationStatus);
+    }
+
     @Override
     public void delete(Integer id) {
 
