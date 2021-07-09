@@ -17,4 +17,14 @@ public interface Constants {
   double MIN_PERSONAL_CREDIT = 8000.0;
 
   String ACCOUNT_NUMBER_PREFIX = "01";
+
+  String EMAIL_ACCOUNT_SIGNATURE_SUBJECT = "Document signature for account creation";
+
+  String ACCOUNT_INFORMATION = "Your new account information";
+
+  String ACCOUNT_REQUEST_DECLINED = "Account creation request declined";
+
+  String MY_EAMIL = "phoenix.banking.2021@gmail.com";
+
+  String MY_PASSWORD = "phoenix2021";
 }
