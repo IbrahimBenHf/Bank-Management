@@ -64,7 +64,7 @@ public class TransactionServiceImpl implements ITransactionService {
     @Override
     public BigDecimal getYearlyNegBalanceByUser(long idUser, int year) {
 
-        List<Operation> OpByUser = operationService.getAllOperationByAccount(idUser)
+        List<Operation> OpByUser = operationService.getAllOperationByClient(idUser)
                 .stream().filter(x -> x.getDate().getYear() == year).collect(Collectors.toList());
         BigDecimal a = BigDecimal.ZERO;
         OpByUser.stream().forEach(operation -> this.getTransactionByOperation(operation.getId(), true)

@@ -63,16 +63,18 @@ public class OperationServiceImpl implements IOperationService {
         return operationRepository.findAll().stream().filter(x -> x.getIsArchived().equals(isArchived)).collect(Collectors.toList());
     }
 
+
+
     @Override
-    public List<Operation> getAllOperationByAccount(long accountNumber) {
+    public List<Operation> getAllOperationByClient(long accountNumber) {
         return operationRepository.findAll().stream()
                 .filter(x -> x.getAccount().getId() == accountNumber)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<Operation> getAllOperationByAccountAndStatus(long accountNumber, OperationStatus operationStatus) {
-        Collection<Operation> operations = getAllOperationByAccount(accountNumber);
+    public List<Operation> getAllOperationByClientAndStatus(long accountNumber, OperationStatus operationStatus) {
+        Collection<Operation> operations = getAllOperationByClient(accountNumber);
         return operations.stream().filter(x -> x.getOperationStatus().equals(operationStatus)).collect(Collectors.toList());
     }
 
