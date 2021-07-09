@@ -1,4 +1,4 @@
-package tn.esprit.gestionbancaire.controller.api;
+package tn.esprit.gestionbancaire.controller;
 
 public class TransactionController {
 

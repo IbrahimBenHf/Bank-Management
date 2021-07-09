@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -22,7 +24,7 @@ public abstract class Account implements Serializable {
 
     private Date creationDate;
 
-    private float balance;
+    private BigDecimal balance;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -34,4 +36,6 @@ public abstract class Account implements Serializable {
     @OneToMany(mappedBy = "account")
     private List<Card> cards;
 
+    @OneToMany(mappedBy="account")
+    private Collection<Operation> operations;
 }
