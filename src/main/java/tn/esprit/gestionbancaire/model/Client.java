@@ -19,11 +19,14 @@ public class Client implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
+    private String nID;
     private String firstName;
     private String lastName;
     private String address;
     private String email;
     private String phoneNumber;
+    private int age;
+    private String job;
     private boolean validated;
 
 }
