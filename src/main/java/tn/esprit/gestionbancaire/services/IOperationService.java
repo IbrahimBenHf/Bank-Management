@@ -9,11 +9,15 @@ public interface IOperationService {
 
     Operation save(Operation operation);
 
+    Operation findOperationById(Integer id);
+
     Operation updateOperationStatus(Integer idOperation, OperationStatus operationStatus);
 
     List<Operation> getArchivedOperation(boolean inArchived);
 
-    List<Operation> getAllOperationByAccount(int accountNumber);
+    List<Operation> getAllOperationByClient(long accountNumber);
 
-    List<Operation> getAllOperationByAccountAndStatus(int accountNumber, OperationStatus operationStatus);
+    List<Operation> getAllOperationByClientAndStatus(long accountNumber, OperationStatus operationStatus);
+
+    void revertOperation(Operation operation, Boolean isNegativeTx, boolean isDebit);
 }

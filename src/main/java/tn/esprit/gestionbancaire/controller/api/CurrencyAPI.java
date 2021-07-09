@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tn.esprit.gestionbancaire.model.Currency;
 
+import javax.money.MonetaryAmount;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -63,20 +64,22 @@ public interface CurrencyAPI {
     })
     void deleteCurrency(@PathVariable("idCurrency") Integer idCurrency);
 
-    @PatchMapping(APP_ROOT + "/currencies/find/{code}")
+    @GetMapping(value = APP_ROOT + "/currencies/find", consumes = MediaType.APPLICATION_JSON_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "find currency by code", notes = "this methode can find currency by code", response = Currency.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Currency found "),
             @ApiResponse(code = 404, message = "Currency is not found")
     })
-    ResponseEntity<Currency> getByName(@PathVariable("code") String code);
+    ResponseEntity<Currency> getByName(@RequestBody String code);
 
-    @PatchMapping(APP_ROOT + "/currencies/Convert/{from}/{to}")
+   /* @GetMapping(APP_ROOT + "/currencies/Convert/{from}/{to}")
     @ApiOperation(value = "convert currencies", notes = "this methode can convert currencies", response = String.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Currency exchanged "),
             @ApiResponse(code = 404, message = "Currency is not exchanged")
     })
-    ResponseEntity<String> retrieveExchangeValue(@PathVariable("from") String from,@PathVariable("to") String to,@RequestBody BigDecimal quantity);
-
+    ResponseEntity<String> retrieveExchangeValue(@PathVariable("from") String from,@PathVariable("to") String to,@RequestBody BigDecimal quantity);*/
+   @PostMapping(value = APP_ROOT + "/currencies/convert")
+   @ResponseBody
+   MonetaryAmount convert(@RequestParam String currentCurrency, String targetCurrency, BigDecimal amount) ;
 }

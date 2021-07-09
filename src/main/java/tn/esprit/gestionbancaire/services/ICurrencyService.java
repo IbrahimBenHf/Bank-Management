@@ -2,6 +2,8 @@ package tn.esprit.gestionbancaire.services;
 
 import tn.esprit.gestionbancaire.model.Currency;
 
+import javax.money.MonetaryAmount;
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface ICurrencyService {
@@ -19,4 +21,6 @@ public interface ICurrencyService {
     List<Currency> findAllCryptoCurrency();
 
     void delete(Integer id);
+
+    MonetaryAmount convert(String currentCurrency, String targetCurrency, BigDecimal amount);
 }
