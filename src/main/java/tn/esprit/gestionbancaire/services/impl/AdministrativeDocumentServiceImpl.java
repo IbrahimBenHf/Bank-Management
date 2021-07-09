@@ -42,9 +42,11 @@ public class AdministrativeDocumentServiceImpl implements AdministrativeDocument
         }
         Credit credit = creditService.findById(administrativeDocument.getCredit().getId());
         List<String> notes = credit.getNotes();
-        notes.add("Add New " + administrativeDocument.getAdministrativeDocumentType() + " Document N:" +administrativeDocument.getId());
+        notes.add("Add New " + administrativeDocument.getAdministrativeDocumentType() + " Document has been added");
         credit.setNotes(notes);
+        administrativeDocument.setCreationDate(Instant.now());
         administrativeDocument.setLastModifiedDate(Instant.now());
+        credit.setLastModifiedDate(Instant.now());
         return administrativeDocumentRepository.save(administrativeDocument);
     }
 
@@ -52,7 +54,7 @@ public class AdministrativeDocumentServiceImpl implements AdministrativeDocument
     public AdministrativeDocument update(AdministrativeDocument administrativeDocument) {
         Credit credit = creditService.findById(administrativeDocument.getCredit().getId());
         List<String> notes = credit.getNotes();
-        notes.add(administrativeDocument.getAdministrativeDocumentType() + "Document N:" +administrativeDocument.getId() + "has been updated");
+        notes.add(administrativeDocument.getAdministrativeDocumentType() + "Document has been updated");
         credit.setNotes(notes);
         administrativeDocument.setLastModifiedDate(Instant.now());
         return administrativeDocumentRepository.save(administrativeDocument);
@@ -91,7 +93,7 @@ public class AdministrativeDocumentServiceImpl implements AdministrativeDocument
             administrativeDocumentRepository.save(administrativeDocument);
             Credit credit = creditService.findById(administrativeDocument.getCredit().getId());
             List<String> notes = credit.getNotes();
-            notes.add("Add New " + administrativeDocument.getAdministrativeDocumentType() + "Document N:" + id);
+            notes.add("Add New image has been add to " + administrativeDocument.getAdministrativeDocumentType() + "Document N:" + id);
             credit.setNotes(notes);
             administrativeDocument.setLastModifiedDate(Instant.now());
         }

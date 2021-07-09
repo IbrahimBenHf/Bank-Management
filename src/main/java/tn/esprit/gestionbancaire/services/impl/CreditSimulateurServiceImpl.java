@@ -10,6 +10,7 @@ import tn.esprit.gestionbancaire.exception.InvalidOperationException;
 import tn.esprit.gestionbancaire.model.Credit;
 import tn.esprit.gestionbancaire.services.CreditService;
 import tn.esprit.gestionbancaire.services.CreditSimulateurService;
+import tn.esprit.gestionbancaire.services.CreditTemplateService;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -30,19 +31,24 @@ public class CreditSimulateurServiceImpl implements CreditSimulateurService {
     double profitableUserRate;
 
     private CreditService creditService;
+    private CreditTemplateService creditTemplateService;
 
     @Autowired
     public CreditSimulateurServiceImpl(
-            CreditService creditService
+            CreditService creditService,
+            CreditTemplateService creditTemplateService
     )
     {
         this.creditService = creditService;
+        this.creditTemplateService = creditTemplateService;
     }
     @Override
     public Map<Integer, Double> prsonalCredit(double creditAmout, Integer repaymentPeriod) {
-        if (creditAmout < MIN_MEDIA_CREDIT || creditAmout > MAX_MEDIA_CREDIT) {
-            log.error("Credit Amout should less then 100000 more then 10000 ", creditAmout);
-            throw new InvalidOperationException("Credit Amout should less then 100000 more then 10000 !!", ErrorCodes.MEDIA_CREDIT_SIMILATEUR_AMOUNT);
+        double min = creditTemplateService.findById(1).getMinValue();
+        double max = creditTemplateService.findById(1).getMaxValue();
+        if (creditAmout < min || creditAmout > max) {
+            log.error("Credit Amout should less then "+max+" more then "+min+" !!", creditAmout);
+            throw new InvalidOperationException("Credit Amout should less then "+max+" more then "+min+" !!", ErrorCodes.MEDIA_CREDIT_SIMILATEUR_AMOUNT);
         }
         Map<Integer,Double> map = new HashMap<>();
         double fixedRepayment = creditAmout / repaymentPeriod;
@@ -59,6 +65,7 @@ public class CreditSimulateurServiceImpl implements CreditSimulateurService {
     @Override
     public Map<Integer, Double> vehicleCredit(double vehicleAmout, Integer vehicleFiscalPower, double selfFinancing, Integer repaymentPeriod) {
         double additionalRate;
+
         //User user = userService.getCurentUser();
         if (selfFinancing < vehicleAmout * MIN_SELF_FINANCING) {
             log.error("Insufficient Self Financing", selfFinancing);
@@ -95,9 +102,11 @@ public class CreditSimulateurServiceImpl implements CreditSimulateurService {
     //for admin
     @Override
     public Map<Integer, Double> prsonalCredit(double creditAmout, Integer repaymentPeriod, double rate) {
-        if (creditAmout < MIN_MEDIA_CREDIT || creditAmout > MAX_MEDIA_CREDIT) {
-            log.error("Credit Amout should less then 100000 more then 10000 ", creditAmout);
-            throw new InvalidOperationException("Credit Amout should less then 100000 more then 10000 !!", ErrorCodes.MEDIA_CREDIT_SIMILATEUR_AMOUNT);
+        double min = creditTemplateService.findById(1).getMinValue();
+        double max = creditTemplateService.findById(1).getMaxValue();
+        if (creditAmout < min || creditAmout > max) {
+            log.error("Credit Amout should less then "+max+" more then "+min+" !!", creditAmout);
+            throw new InvalidOperationException("Credit Amout should less then "+max+" more then "+min+" !!", ErrorCodes.MEDIA_CREDIT_SIMILATEUR_AMOUNT);
         }
         Map<Integer,Double> map = new HashMap<>();
         double fixedRepayment = creditAmout / repaymentPeriod;

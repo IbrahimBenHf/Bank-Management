@@ -13,9 +13,12 @@ import tn.esprit.gestionbancaire.exception.InvalidOperationException;
 import tn.esprit.gestionbancaire.model.AdministrativeDocument;
 import tn.esprit.gestionbancaire.model.Credit;
 import tn.esprit.gestionbancaire.enums.CreditStatus;
+import tn.esprit.gestionbancaire.model.CreditTemplate;
 import tn.esprit.gestionbancaire.repository.CreditRepository;
 import tn.esprit.gestionbancaire.services.CreditService;
 import tn.esprit.gestionbancaire.services.CreditSimulateurService;
+import tn.esprit.gestionbancaire.services.CreditTemplateService;
+import tn.esprit.gestionbancaire.services.MailService;
 import tn.esprit.gestionbancaire.validator.CreditValidator;
 
 import java.time.Instant;
@@ -30,23 +33,33 @@ public class CreditServiceImpl implements CreditService {
 
     private CreditRepository creditRepository;
     private CreditSimulateurService creditSimulateurService;
+    private MailService mailService;
+    private CreditTemplateService creditTemplateService;
     @Autowired
     public CreditServiceImpl(CreditRepository creditRepository,
-                             @Lazy CreditSimulateurService creditSimulateurService) {
+                             @Lazy CreditSimulateurService creditSimulateurService, MailService mailService, CreditTemplateService creditTemplateService) {
         this.creditRepository = creditRepository;
         this.creditSimulateurService = creditSimulateurService;
+        this.mailService = mailService;
+        this.creditTemplateService = creditTemplateService;
     }
 
 
 
     @Override
     public Credit save(Credit credit) {
-        List<String> errors = CreditValidator.validate(credit);
+        List<String> errors = CreditValidator.validate(credit,creditTemplateService.findById(credit.getCreditTemplate().getId()));
         if (!errors.isEmpty()) {
             log.error("Credit is not valid {}", credit);
             throw new InvalidEntityException("Credit is not valid", ErrorCodes.CREDIT_NOT_VALID, errors);
         }
+        //if(credit.getCreditTemplate().getId() == 2){
+        //  credit.setAmount(creditSimulateurService.vehicleCredit(credit.getAmount(),credit.getVehicleFiscalPower(),credit.getSelfFinancing(),credit.getRepaymentPeriod()).entrySet().stream().mapToDouble(e->e.getValue()).sum());
+        //}
+        credit.setCreationDate(Instant.now());
+        credit.setLastModifiedDate(Instant.now());
         credit.setCreditStatus(CreditStatus.OPEN);
+        mailService.creditNotify(credit,null);
         return  creditRepository.save(credit);
     }
 
@@ -77,6 +90,7 @@ public class CreditServiceImpl implements CreditService {
             log.info(""+ similation);
             //call operation service
             //send email to client
+            mailService.creditNotify(credit,creditStatus);
         }
         if(creditStatus.equals(CreditStatus.REFUSED)){
             Credit credit = checkCreditStatus(idCredit);
@@ -87,6 +101,7 @@ public class CreditServiceImpl implements CreditService {
             credit.setNotes(notes);
             credit.setLastModifiedDate(Instant.now());
             //send email to client
+            mailService.creditNotify(credit,creditStatus);
         }
 
         Credit credit = checkCreditStatus(idCredit);
@@ -96,6 +111,7 @@ public class CreditServiceImpl implements CreditService {
         credit.setNotes(notes);
         credit.setLastModifiedDate(Instant.now());
         //send email to client
+        mailService.creditNotify(credit,creditStatus);
         return creditRepository.save(credit);
     }
 
@@ -227,6 +243,7 @@ public class CreditServiceImpl implements CreditService {
                     credit.setNotes(notes);
                     credit.setLastModifiedDate(Instant.now());
                     credit.setCreditStatus(CreditStatus.WAITING);
+                    mailService.creditNotify(credit,CreditStatus.WAITING);
                     creditRepository.save(credit);
                 }
 

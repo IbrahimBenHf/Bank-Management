@@ -74,6 +74,11 @@ public class CreditController implements CreditApi {
     }
 
     @Override
+    public Credit findCreditById(Integer id) {
+        return creditService.findById(id);
+    }
+
+    @Override
     public Map<String,Integer> mostUsedCredit() {
         return creditService.mostOpenedCreditByType();
     }

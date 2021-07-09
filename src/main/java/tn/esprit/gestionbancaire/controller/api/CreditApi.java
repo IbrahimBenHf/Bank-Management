@@ -84,6 +84,13 @@ public interface CreditApi {
     })
     List<String> addNote(@PathVariable("id") Integer id,@RequestParam("note") String note);
 
+    @GetMapping(value = APP_ROOT + "/credits/findbyid/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Get credit by id", notes = "This methode Get credit by id ", responseContainer = "Credit")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "List of credits / Void list")
+    })
+    Credit findCreditById(@PathVariable("id") Integer id);
+
     @GetMapping(value = APP_ROOT + "/credits/mostusedcredit", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Get the most used credit", notes = "This methode Get the most used credit ", responseContainer = "Map<String,Integer>")
     @ApiResponses(value = {
