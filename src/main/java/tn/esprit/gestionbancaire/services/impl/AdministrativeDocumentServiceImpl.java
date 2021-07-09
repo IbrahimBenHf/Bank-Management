@@ -3,8 +3,10 @@ package tn.esprit.gestionbancaire.services.impl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import tn.esprit.gestionbancaire.enums.CreditStatus;
 import tn.esprit.gestionbancaire.exception.ErrorCodes;
 import tn.esprit.gestionbancaire.exception.InvalidEntityException;
+import tn.esprit.gestionbancaire.exception.InvalidOperationException;
 import tn.esprit.gestionbancaire.model.AdministrativeDocument;
 import tn.esprit.gestionbancaire.model.Credit;
 import tn.esprit.gestionbancaire.repository.AdministrativeDocumentRepository;
@@ -77,7 +79,13 @@ public class AdministrativeDocumentServiceImpl implements AdministrativeDocument
             log.error("Administrative Document ID is null");
             return;
         }
-        administrativeDocumentRepository.deleteById(id);
+        Optional<AdministrativeDocument> administrativeDocument = administrativeDocumentRepository.findById(id);
+
+        if (administrativeDocument.isPresent()) {
+            administrativeDocumentRepository.deleteById(id);
+        }
+
+
     }
 
     @Override

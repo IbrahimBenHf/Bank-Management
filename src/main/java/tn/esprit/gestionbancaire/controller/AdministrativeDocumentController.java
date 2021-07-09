@@ -18,17 +18,14 @@ public class AdministrativeDocumentController  implements AdministrativeDocument
 
     private AdministrativeDocumentService administrativeDocumentService;
     private FlickrService flickrService;
-    private CreditService creditService;
 
     @Autowired
     public AdministrativeDocumentController(
             AdministrativeDocumentService administrativeDocumentService,
-            FlickrService flickrService,
-            CreditService creditService
+            FlickrService flickrService
     ) {
         this.administrativeDocumentService = administrativeDocumentService;
         this.flickrService = flickrService;
-        this.creditService = creditService;
     }
     @Override
     public List<AdministrativeDocument> findAllByCreditId(Integer idCredit) {
@@ -43,13 +40,10 @@ public class AdministrativeDocumentController  implements AdministrativeDocument
         return ResponseEntity.ok( administrativeDocumentService.updateAdministrativeDocumentImage(id, imageURL));
     }
 
-    /**@Override
-    public ResponseEntity<AdministrativeDocument> save(Integer idCredit, AdministrativeDocument administrativeDocument, MultipartFile photo, String title) throws IOException {
-        administrativeDocument.setPhoto(flickrService.savePhoto(photo.getInputStream(),title));
-        administrativeDocument.setCredit(creditService.findById(idCredit));
-        return ResponseEntity.ok(administrativeDocumentService.save(administrativeDocument));
+    @Override
+    public void deleteAdministrativeDocumentImage(Integer id) {
+        administrativeDocumentService.delete(id);
     }
-    */
 
     @Override
     public ResponseEntity<AdministrativeDocument> save(AdministrativeDocument administrativeDocument) {
