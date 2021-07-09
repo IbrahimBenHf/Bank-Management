@@ -63,9 +63,9 @@ public class UserService implements IUserService{
 		// TODO Auto-generated method stub
 		Map<String, List<User>> map = new HashMap<>();
 		for (User user : userRepository.findAll()) {
-			if(map.get(user.getProfession())==null)
-				map.put(user.getProfession(), new ArrayList<User>());
-			map.get(user.getProfession()).add(user);
+			if(map.get(user.getClient().getJob())==null)
+				map.put(user.getClient().getJob(), new ArrayList<User>());
+			map.get(user.getClient().getJob()).add(user);
 
 		}
 		return map;
@@ -87,9 +87,9 @@ public class UserService implements IUserService{
 	public Map<String, List<User>> getUsersBySexe() {
 		Map<String, List<User>> map = new HashMap<>();
 		for (User user : userRepository.findAll()) {
-			if(map.get(user.getSexe().toString())==null)
-				map.put(user.getSexe().toString(), new ArrayList<User>());
-			map.get(user.getSexe().toString()).add(user);
+			if(map.get(user.getClient().getSexe().toString())==null)
+				map.put(user.getClient().getSexe().toString(), new ArrayList<User>());
+			map.get(user.getClient().getSexe().toString()).add(user);
 
 		}
 		return map;
@@ -99,9 +99,9 @@ public class UserService implements IUserService{
 	public Map<String, List<User>> getUsersByCivilStatus() {
 		Map<String, List<User>> map = new HashMap<>();
 		for (User user : userRepository.findAll()) {
-			if(map.get(user.getCivilState().toString())==null)
-				map.put(user.getCivilState().toString(), new ArrayList<User>());
-			map.get(user.getCivilState().toString()).add(user);
+			if(map.get(user.getClient().getCivilState().toString())==null)
+				map.put(user.getClient().getCivilState().toString(), new ArrayList<User>());
+			map.get(user.getClient().getCivilState().toString()).add(user);
 
 		}
 		return map;

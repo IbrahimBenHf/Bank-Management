@@ -12,18 +12,22 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import tn.esprit.gestionbancaire.model.User;
 import tn.esprit.gestionbancaire.services.IUserService;
+import tn.esprit.gestionbancaire.utils.Constants;
 
-@RestController
+@RestController()
+@RequestMapping(Constants.APP_ROOT+"/user")
+
 public class UserController {
 
 	@Autowired  
 	IUserService userService;  
 	
-	@GetMapping("/user")  
+	@GetMapping("/getAll")  
 	private ResponseEntity<List<User>> getAll()   
 	{  
 		return new ResponseEntity<List<User>>(userService.getAll(), HttpStatus.OK);
@@ -33,24 +37,24 @@ public class UserController {
 	{  
 		return new ResponseEntity<Map<String,List<User>>>(userService.getUsersByProfession(), HttpStatus.OK);
 	} 
-	@GetMapping("/user/{id}")  
+	@GetMapping("/userById/{id}")  
 	private ResponseEntity<User> getUserById(@PathVariable("id") Long id)   
 	{  
 		return new ResponseEntity<User>(userService.getUserById(id), HttpStatus.OK);
 	}  
-	@DeleteMapping("/user/{id}")  
+	@DeleteMapping("/deleteUser/{id}")  
 	private void deleteBook(@PathVariable("id") Long id)   
 	{  
 		userService.deleteUser(id);
 	}  
 	//creating post mapping that post the book detail in the database  
-	@PostMapping("/user")  
+	@PostMapping("/userRequest")  
 	private ResponseEntity<User> saveBook(@RequestBody User user)   
 	{  
 		return new ResponseEntity<User>(userService.saveUser(user), HttpStatus.OK);
 	}  
 	//creating put mapping that updates the book detail   
-	@PutMapping("/user")  
+	@PutMapping("/updateUser")  
 	private ResponseEntity<User> update(@RequestBody User user)   
 	{  
 		return new ResponseEntity<User>(userService.updateUser(user), HttpStatus.OK);

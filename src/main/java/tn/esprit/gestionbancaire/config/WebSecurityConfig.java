@@ -7,6 +7,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -47,22 +48,22 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	public AuthenticationManager authenticationManagerBean() throws Exception {
 		return super.authenticationManagerBean();
 	}
-
+//	@Override
+//	public void configure(WebSecurity web) throws Exception {
+//		// TODO Auto-generated method stub
+//		super.configure(web);
+//		web.ignoring().antMatchers("/swagger-ui.html/**").antMatchers("/webjars/**");
+//
+//	}
 	@Override
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
 		// We don't need CSRF for this example
 		httpSecurity.csrf().disable()
 				// dont authenticate this particular request
-				.authorizeRequests().antMatchers("/authenticate").permitAll().
-				antMatchers("/v2/api-docs").permitAll().
-				antMatchers("/swagger-resources").permitAll().
-				antMatchers("/swagger-resources/**").permitAll().
-				antMatchers("/configuration/ui").permitAll().
-				antMatchers("/configuration/security").permitAll().
-				antMatchers("/swagger-ui.html").permitAll().
-				antMatchers("/swagger-ui/**").permitAll().
+				.authorizeRequests().antMatchers("/gestionbancaire/**").authenticated().
+				antMatchers("/user").hasAuthority("admin").
 				// all other requests need to be authenticated
-				anyRequest().authenticated().and().
+				antMatchers("/swagger-ui.html/**").permitAll().and().
 				// make sure we use stateless session; session won't be used to
 				// store user's state.
 				exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()
