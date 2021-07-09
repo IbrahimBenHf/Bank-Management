@@ -7,7 +7,9 @@ import org.springframework.web.bind.annotation.RestController;
 import tn.esprit.gestionbancaire.controller.api.CurrencyAPI;
 import tn.esprit.gestionbancaire.model.Currency;
 import tn.esprit.gestionbancaire.services.ICurrencyService;
+import tn.esprit.gestionbancaire.services.impl.CurrencyServiceImpl;
 
+import javax.money.MonetaryAmount;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -16,7 +18,7 @@ public class CurrencyController implements CurrencyAPI {
 
     @Autowired
     ICurrencyService currencyService;
-
+    CurrencyServiceImpl currencyConverterService;
     @Override
     public ResponseEntity<Currency> save(Currency currency) {
         return ResponseEntity.ok(currencyService.save(currency));
@@ -54,11 +56,16 @@ public class CurrencyController implements CurrencyAPI {
     }
 
     @Override
+    public MonetaryAmount convert(String currentCurrency, String targetCurrency, BigDecimal amount) {
+        return   currencyService.convert(currentCurrency,targetCurrency,amount);
+    }
+
+  /*  @Override
     public ResponseEntity<String> retrieveExchangeValue(String from, String to, BigDecimal quantity) {
         Currency fromCurrency = currencyService.findByCode(from);
         Currency toCurrency = currencyService.findByCode(to);
 
         return ResponseEntity.ok(quantity.multiply(fromCurrency.getSellValue())
                 .divide(toCurrency.getBuyValue()).toPlainString());
-    }
+    }*/
 }
