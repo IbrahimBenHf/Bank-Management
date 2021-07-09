@@ -62,7 +62,7 @@ public class TransactionServiceImpl implements ITransactionService {
     }
 
     @Override
-    public BigDecimal getYearlyNegBalanceByUser(long idUser, int year) {
+    public BigDecimal getYearlyNegBalanceByClient(long idUser, int year) {
 
         List<Operation> OpByUser = operationService.getAllOperationByClient(idUser)
                 .stream().filter(x -> x.getDate().getYear() == year).collect(Collectors.toList());
@@ -73,13 +73,12 @@ public class TransactionServiceImpl implements ITransactionService {
     }
 
     @Override
-    public Integer countNegativeTransactionBalanceByClient(long idClient) {
-        //TODO
-        return null;
+    public Integer countNegativeTransactionBalanceByAccount(long idAccount) {
+       return null;
     }
 
     @Override
-    public Integer countNegativeBalanceByClient(long idUser) {
+    public Integer countNegativeBalanceByUser(long idUser) {
         return null;
     }
 
@@ -98,6 +97,7 @@ public class TransactionServiceImpl implements ITransactionService {
         return null;
     }
 
+    // TODO
     @Override
     public Transaction RevertTransaction(Integer id) {
         checkIdTransaction(id);

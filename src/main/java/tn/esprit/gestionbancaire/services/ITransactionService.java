@@ -17,13 +17,13 @@ public interface ITransactionService {
 
     List<Transaction> getTransactionByOperation(long  idOperation, Boolean isNegative);
 
-    BigDecimal getYearlyNegBalanceByUser(long idUser, int year);
+    BigDecimal getYearlyNegBalanceByClient(long idUser, int year);
 
-    Integer countNegativeTransactionBalanceByClient(long idUser);
+    Integer countNegativeTransactionBalanceByAccount(long idUser);
 
-    // gdech men mara jbed fi el rouge
 
-    Integer countNegativeBalanceByClient(long idUser);
+
+    Integer countNegativeBalanceByUser(long idUser);
 
     Double getAllNegativeBalance();
 
