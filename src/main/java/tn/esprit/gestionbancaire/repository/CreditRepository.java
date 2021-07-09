@@ -14,5 +14,6 @@ public interface CreditRepository extends JpaRepository<Credit, Integer> {
     List<Credit> findAllByCreditStatus(CreditStatus creditStatus);
     List<Credit> findAllByArchived(boolean archived);
     long countCreditByCreditStatus (CreditStatus status);
+    Integer countCreditByCreditTemplateTitle(String title);
 
 }

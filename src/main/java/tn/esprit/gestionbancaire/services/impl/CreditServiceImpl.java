@@ -71,6 +71,8 @@ public class CreditServiceImpl implements CreditService {
 
             if( credit.getCreditTemplate().getCreditType().equals("Vehicle") ){
                  similation = creditSimulateurService.vehicleCredit(credit.getAmount(),credit.getVehicleFiscalPower(),credit.getSelfFinancing(),credit.getRepaymentPeriod());
+            } else if ( credit.getCreditTemplate().getCreditType().equals("Personal") ){
+                similation = creditSimulateurService.prsonalCredit(credit.getAmount(),credit.getRepaymentPeriod());
             }
             log.info(""+ similation);
             //call operation service
@@ -103,7 +105,6 @@ public class CreditServiceImpl implements CreditService {
             log.error("Credit ID is null");
             return null;
         }
-
         return creditRepository.findById(id).orElseThrow(() ->
                 new EntityNotFoundException(
                         "There is no credit found with ID = " + id,
@@ -134,6 +135,7 @@ public class CreditServiceImpl implements CreditService {
         return creditRepository.findAllByCreditStatus(creditStatus);
     }
 
+    //For admin
     @Override
     public void delete(Integer id) {
 
@@ -146,9 +148,11 @@ public class CreditServiceImpl implements CreditService {
             if (credit.isPresent() && (credit.get().getCreditStatus().equals(CreditStatus.OPEN) || credit.get().getCreditStatus().equals(CreditStatus.IN_PROGRESS) || credit.get().getCreditStatus().equals(CreditStatus.WAITING))) {
                 throw new InvalidOperationException("Faild to delete credit, Credit must be in 'ACCEPTED' or 'REFUSED'", ErrorCodes.CREDIT_IS_NOT_CLOSED);
             }
+
         creditRepository.deleteById(id);
 
     }
+
 
     @Override
     public List<String> addNote(Integer id,String note) {
@@ -173,15 +177,26 @@ public class CreditServiceImpl implements CreditService {
         //list of opened credit
         List<Credit> credits = creditRepository.findAllByCreditStatus(CreditStatus.OPEN);
         //Administrative Document Type list
-        List<String> doctypes = Stream.of(AdministrativeDocumentType.values())
-                .map(Enum::name)
-                .collect(Collectors.toList());
+        List<String> doctypes = new ArrayList<>();
+
         for(Credit credit : credits){
             Instant now = Instant.now();
             Instant creationDate = credit.getCreationDate();
             long days = creationDate.until(now, ChronoUnit.DAYS);
+            if ( credit.getCreditTemplate().getCreditType().equals("Vehicle")){
+                doctypes = Stream.of(AdministrativeDocumentType.values())
+                        .map(Enum::name)
+                        .collect(Collectors.toList());
+            }else if (credit.getCreditTemplate().getCreditType().equals("Personal") ){
+                doctypes = Stream.of(AdministrativeDocumentType.values())
+                        .map(Enum::name)
+                        .collect(Collectors.toList());
+                doctypes.remove(3);
+            }
+
             if (days >= 2){
                 doctypes.stream().forEach(e -> log.info("Docs Types : " + e));
+
                 //test for credit Type
                 List<String> administrativeDocumetTypes = new ArrayList<>();
                 for (AdministrativeDocument administrativeDocument : credit.getAdministrativeDocuments()){
@@ -194,27 +209,20 @@ public class CreditServiceImpl implements CreditService {
                 }
                 boolean existe = (i == doctypes.size());
                 administrativeDocumetTypes.stream().forEach(e -> log.info(e));
-
-                log.info("Existe : "+existe);
-//                for (AdministrativeDocument administrativeDocument : credit.getAdministrativeDocuments()){
-//                    if()
-//                }
-                //Collections.disjoint(credit.getAdministrativeDocuments(), doctypes);
-               /* if(credit.getCreditTemplate().getType() == CreditType.PERSONAL){
-                    doctypes.remove(3);
-
-                    for (AdministrativeDocument administrativeDocument : credit.getAdministrativeDocuments()){
-                        if(administrativeDocument.getAdministrativeDocumentType().e)
-                    }
-                    if()
-                }*/
+                    log.info("Existe : "+existe);
                 if(!existe){
                     updated.add(credit);
                     List<String> notes = credit.getNotes();
-                    notes.add("Auto Validator : You need to add all needed Administrative Documents type '    INSURANCE,\n" +
-                            "    CNSS,\n" +
-                            "    WORK_CONTRACT,\n" +
-                            "    FACTURE");
+                    if ( credit.getCreditTemplate().getCreditType().equals("Vehicle")){
+                        notes.add("Auto Validator : You need to add all needed Administrative Documents type '    INSURANCE,\n" +
+                                "    CNSS,\n" +
+                                "    WORK_CONTRACT,\n" +
+                                "    FACTURE");
+                    }else {
+                        notes.add("Auto Validator : You need to add all needed Administrative Documents type '    INSURANCE,\n" +
+                                "    CNSS,\n" +
+                                "    WORK_CONTRACT,\n");
+                    }
                     notes.add("Your Credit Request Now is " + CreditStatus.WAITING);
                     credit.setNotes(notes);
                     credit.setLastModifiedDate(Instant.now());
@@ -227,6 +235,23 @@ public class CreditServiceImpl implements CreditService {
         log.info("Updated Credit list :");
         updated.stream().forEach(e-> log.info("Credit ID: "+e.getId()));
         return updated;
+    }
+
+    @Override
+    public Map<String, Integer> mostOpenedCreditByType() {
+        Map<String, Integer> map = new HashMap<>();
+        Integer vehicleCredit = creditRepository.countCreditByCreditTemplateTitle("Vehicle");
+        Integer prsonalCredit = creditRepository.countCreditByCreditTemplateTitle("Personal");
+        map.put("Vehicle",vehicleCredit);
+        map.put("Personal",prsonalCredit);
+        if( vehicleCredit == prsonalCredit ){
+            map.put("Personal are equals",prsonalCredit);
+        }else if (vehicleCredit > prsonalCredit){
+            map.put("Vehicle credit is the most used credit ",vehicleCredit);
+        }else{
+            map.put("Personal credit is the most used credit ",prsonalCredit);
+        }
+        return map;
     }
 
     private void checkIdCredit(Integer idCredit) {

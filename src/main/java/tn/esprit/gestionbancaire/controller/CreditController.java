@@ -10,6 +10,7 @@ import tn.esprit.gestionbancaire.services.CreditService;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -70,5 +71,10 @@ public class CreditController implements CreditApi {
     @Override
     public List<String> addNote(Integer id, String note) {
         return creditService.addNote(id,note);
+    }
+
+    @Override
+    public Map<String,Integer> mostUsedCredit() {
+        return creditService.mostOpenedCreditByType();
     }
 }

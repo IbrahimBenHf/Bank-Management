@@ -83,7 +83,6 @@ public class AdministrativeDocumentServiceImpl implements AdministrativeDocument
         if (id == null) {
             log.error("Administrative Document ID is null");
         }
-
         Optional<AdministrativeDocument> byId = administrativeDocumentRepository.findById(id);
         AdministrativeDocument administrativeDocument = null;
         if (byId.isPresent()) {
@@ -92,14 +91,10 @@ public class AdministrativeDocumentServiceImpl implements AdministrativeDocument
             administrativeDocumentRepository.save(administrativeDocument);
             Credit credit = creditService.findById(administrativeDocument.getCredit().getId());
             List<String> notes = credit.getNotes();
-            notes.add("Add New " + administrativeDocument.getAdministrativeDocumentType() + "Document N:" +administrativeDocument.getId());
+            notes.add("Add New " + administrativeDocument.getAdministrativeDocumentType() + "Document N:" + id);
             credit.setNotes(notes);
             administrativeDocument.setLastModifiedDate(Instant.now());
-
         }
-
         return administrativeDocument;
-
-
     }
 }
