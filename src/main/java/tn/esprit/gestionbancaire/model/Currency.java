@@ -2,11 +2,9 @@ package tn.esprit.gestionbancaire.model;
 
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 @Entity
 @Data
@@ -16,4 +14,13 @@ public class Currency implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
+    private String symbol;
+    private String name;
+    private Integer decimalDigits;
+    private Integer rounding;
+    private String code;
+    private boolean isCryptoCurrency;
+    private BigDecimal sellValue;
+    private BigDecimal buyValue;
+
 }
