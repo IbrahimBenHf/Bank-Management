@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import tn.esprit.gestionbancaire.model.Client;
 import tn.esprit.gestionbancaire.model.User;
+import tn.esprit.gestionbancaire.repository.ClientRepository;
 import tn.esprit.gestionbancaire.services.IUserService;
 import tn.esprit.gestionbancaire.utils.Constants;
 
@@ -25,7 +27,9 @@ import tn.esprit.gestionbancaire.utils.Constants;
 public class UserController {
 
 	@Autowired  
-	IUserService userService;  
+	IUserService userService;
+	@Autowired  
+	ClientRepository clientRepository;
 	
 	@GetMapping("/getAll")  
 	private ResponseEntity<List<User>> getAll()   
@@ -48,10 +52,17 @@ public class UserController {
 		userService.deleteUser(id);
 	}  
 	//creating post mapping that post the book detail in the database  
-	@PostMapping("/userRequest")  
-	private ResponseEntity<User> saveBook(@RequestBody User user)   
+	@PostMapping("/userRequest/{cin}")  
+	private ResponseEntity<User> saveBook(@RequestBody User user,@PathVariable("cin") String cin)   
 	{  
-		return new ResponseEntity<User>(userService.saveUser(user), HttpStatus.OK);
+		Client client = clientRepository.findBynID(cin);
+		if(client!=null)
+		{
+			user.setClient(client);
+			return new ResponseEntity<User>(userService.saveUser(user), HttpStatus.OK);
+		}
+		else
+			return new ResponseEntity("Cin not related to client", HttpStatus.FORBIDDEN);
 	}  
 	//creating put mapping that updates the book detail   
 	@PutMapping("/updateUser")  

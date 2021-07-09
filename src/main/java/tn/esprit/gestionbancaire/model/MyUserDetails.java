@@ -9,29 +9,35 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-public class MyUserDetails implements UserDetails{
+public class MyUserDetails implements UserDetails {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	private User user;
 	private String userName;
 	private String password;
 	private boolean active;
 	private List<GrantedAuthority> authorities;
-	 
-	
 
 	public MyUserDetails(User user) {
+		this.user = user;
 		userName = user.getUserName();
 		password = user.getPassword();
 		active = user.getActive();
-		authorities = Arrays.stream(user.getRoles().split(","))
-				.map(SimpleGrantedAuthority::new)
+		authorities = Arrays.stream(user.getRoles().split(",")).map(SimpleGrantedAuthority::new)
 				.collect(Collectors.toList());
 	}
-	
-	
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		// TODO Auto-generated method stub
