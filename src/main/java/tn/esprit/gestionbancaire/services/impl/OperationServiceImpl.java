@@ -5,15 +5,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import tn.esprit.gestionbancaire.enums.OperationStatus;
+import tn.esprit.gestionbancaire.enums.OperationType;
+import tn.esprit.gestionbancaire.enums.TransactionType;
 import tn.esprit.gestionbancaire.exception.EntityNotFoundException;
 import tn.esprit.gestionbancaire.exception.ErrorCodes;
 import tn.esprit.gestionbancaire.exception.InvalidEntityException;
 import tn.esprit.gestionbancaire.exception.InvalidOperationException;
 import tn.esprit.gestionbancaire.model.Operation;
+import tn.esprit.gestionbancaire.model.Transaction;
 import tn.esprit.gestionbancaire.repository.OperationRepository;
 import tn.esprit.gestionbancaire.services.IOperationService;
 import tn.esprit.gestionbancaire.validator.OperationValidator;
 
+import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,6 +36,19 @@ public class OperationServiceImpl implements IOperationService {
             throw new InvalidEntityException("Operation is not valid", ErrorCodes.OPERATION_NOT_VALID, errors);
         }
         operation.setOperationStatus(OperationStatus.TO_BE_EXECUTED);
+        Collection<Transaction> transactions = null;
+        if(operation.getOperationtype().equals(OperationType.PAYMENT) || operation.getOperationtype().equals(OperationType.RETRIEVE)){
+            if(operation.getAmount().compareTo(operation.getAccount().getBalance())>0){
+                Transaction T1 = new Transaction(operation.getDate(), TransactionType.CREDIT,false,false,operation);
+                Transaction T2 = new Transaction(operation.getDate(), TransactionType.CREDIT,true,false,operation);
+                transactions.add(T1);
+                transactions.add(T2);
+                operation.addTransactions(transactions);
+        }else{
+                transactions.add(new Transaction(operation.getDate(), TransactionType.CREDIT,false,false,operation));
+                operation.setTransactions(transactions);
+            }
+        }
         return operationRepository.save(operation);
     }
 
@@ -79,8 +96,17 @@ public class OperationServiceImpl implements IOperationService {
     }
 
     @Override
-    public Void revertOperation(Operation operation, Boolean isNegativeTx, boolean b) {
-        return null;
+    public void revertOperation(Operation operation, Boolean isNegativeTx, boolean isDebit) {
+       operation.setOperationStatus(OperationStatus.CANCELLED);
+       if(isDebit){
+           operation.getAccount().setBalance(operation.getAccount().getBalance().add(operation.getAmount()));
+       }else{
+           operation.getAccount().setBalance(operation.getAccount().getBalance().add(operation.getAmount().negate()));
+           if(isNegativeTx){
+               // add amount to recover
+           }
+       }
+
     }
 
     private void checkIdOperation(Integer idopt) {

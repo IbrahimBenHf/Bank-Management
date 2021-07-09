@@ -9,7 +9,6 @@ import java.util.Date;
 
 @Entity
 @Data
-@Table(name = "transaction")
 public class Transaction extends AbstractEntity implements Serializable {
 
 
@@ -22,4 +21,14 @@ public class Transaction extends AbstractEntity implements Serializable {
     @JoinColumn(name = "Operation_Id")
     private Operation operation;
 
+    public Transaction(Date date, TransactionType txtype, boolean b, boolean b1, Operation operation) {
+        this.date = date;
+        this.transactionType =txtype;
+        this.isNegativeTx = b1;
+        this.operation = operation;
+    }
+
+    public Transaction() {
+
+    }
 }

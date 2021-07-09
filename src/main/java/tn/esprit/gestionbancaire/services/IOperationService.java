@@ -19,5 +19,5 @@ public interface IOperationService {
 
     List<Operation> getAllOperationByClientAndStatus(long accountNumber, OperationStatus operationStatus);
 
-    Void revertOperation(Operation operation, Boolean isNegativeTx, boolean b);
+    void revertOperation(Operation operation, Boolean isNegativeTx, boolean isDebit);
 }

@@ -31,4 +31,9 @@ class Operation extends AbstractEntity implements Serializable {
     @OneToMany(mappedBy="operation")
     private Collection<Transaction> transactions;
 
+
+
+    public void addTransactions(Collection<Transaction> transactions){
+        this.transactions.addAll(transactions);
+    }
 }
