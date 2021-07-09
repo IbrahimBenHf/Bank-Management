@@ -18,7 +18,13 @@ public interface MailTemplates {
     }
 
     static String getNotif(ReclamationStatus reclamationStatus, String title){
-        return "Hello, \nYour reclamation '"+title+"' has been updated with the status "+ reclamationStatus.toString()
+        if (ReclamationStatus.IN_PROGRESS.equals(reclamationStatus)){
+            return "Hello, \nYour reclamation '"+title+"' is under review now with one of our consultants, we'll provide " +
+                    "you with an update when it's resolved."
+                    + "\nThank you for your trust.";
+        }
+        return "Hello, \nYour reclamation '"+title+"' has been fixed and updated with the status "+ reclamationStatus.toString()+". " +
+                "you can check it on our website for further information."
                 + "\nThank you for your trust.";
     }
 }

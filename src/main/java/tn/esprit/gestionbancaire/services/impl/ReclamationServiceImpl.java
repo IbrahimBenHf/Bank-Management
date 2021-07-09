@@ -42,7 +42,9 @@ public class ReclamationServiceImpl implements ReclamationService {
         Reclamation reclamation = checkReclamationStatus(idReclamation);
         reclamation.setStatus(reclamationStatus);
         reclamation.setLastModifiedDate(Instant.now());
+        if(reclamationStatus.equals(ReclamationStatus.RESOLVED)||reclamationStatus.equals(ReclamationStatus.IN_PROGRESS)){
         mailService.notify(reclamationStatus,reclamation.getReclamationTitle());
+        }
         return reclamationRepository.save(reclamation);
     }
 
