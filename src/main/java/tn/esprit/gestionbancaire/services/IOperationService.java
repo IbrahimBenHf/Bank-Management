@@ -15,9 +15,9 @@ public interface IOperationService {
 
     List<Operation> getArchivedOperation(boolean inArchived);
 
-    List<Operation> getAllOperationByAccount(long accountNumber);
+    List<Operation> getAllOperationByClient(long accountNumber);
 
-    List<Operation> getAllOperationByAccountAndStatus(long accountNumber, OperationStatus operationStatus);
+    List<Operation> getAllOperationByClientAndStatus(long accountNumber, OperationStatus operationStatus);
 
     Void revertOperation(Operation operation, Boolean isNegativeTx, boolean b);
 }
