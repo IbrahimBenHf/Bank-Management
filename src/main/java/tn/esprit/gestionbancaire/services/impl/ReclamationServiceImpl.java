@@ -9,6 +9,7 @@ import tn.esprit.gestionbancaire.exception.ErrorCodes;
 import tn.esprit.gestionbancaire.exception.InvalidOperationException;
 import tn.esprit.gestionbancaire.model.Reclamation;
 import tn.esprit.gestionbancaire.repository.ReclamationRepository;
+import tn.esprit.gestionbancaire.services.MailService;
 import tn.esprit.gestionbancaire.services.ReclamationService;
 
 import java.time.Instant;
@@ -18,9 +19,11 @@ import java.util.List;
 public class ReclamationServiceImpl implements ReclamationService {
 
     private ReclamationRepository reclamationRepository;
+    private MailService mailService ;
     @Autowired
-    public ReclamationServiceImpl(ReclamationRepository reclamationRepository) {
+    public ReclamationServiceImpl(ReclamationRepository reclamationRepository,MailService mailService) {
         this.reclamationRepository = reclamationRepository;
+        this.mailService=mailService;
     }
 
 
@@ -38,6 +41,8 @@ public class ReclamationServiceImpl implements ReclamationService {
         checkIdReclamation(idReclamation);
         Reclamation reclamation = checkReclamationStatus(idReclamation);
         reclamation.setStatus(reclamationStatus);
+        reclamation.setLastModifiedDate(Instant.now());
+        mailService.notify(reclamationStatus,reclamation.getReclamationTitle());
         return reclamationRepository.save(reclamation);
     }
 
@@ -74,7 +79,7 @@ public class ReclamationServiceImpl implements ReclamationService {
     private Reclamation checkReclamationStatus(Integer idReclamation) {
         Reclamation reclamation = findById(idReclamation);
         if (reclamation.isReclamationClosed()) {
-            throw new InvalidOperationException("Is not allowed to change Reclamation status when he's done", ErrorCodes.RECLAMATION_NOT_FOUND);
+            throw new InvalidOperationException("It's not possible to change Reclamation status when it's already closed", ErrorCodes.RECLAMATION_NOT_FOUND);
         }
         return reclamation;
     }
