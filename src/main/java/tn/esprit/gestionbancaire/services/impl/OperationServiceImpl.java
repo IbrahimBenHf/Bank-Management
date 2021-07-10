@@ -129,11 +129,11 @@ public class OperationServiceImpl implements IOperationService {
     public Operation revertOperation(Integer idOperation) {
         Operation operation = this.findOperationById(idOperation);
        operation.setOperationStatus(OperationStatus.CANCELLED);
-       //if(operation.getAccount() instanceof CurrentAccount){
-        //manageRevertForCurrentAccount(operation);
-       //}else{
+       if(operation.getAccount() instanceof CurrentAccount){
+        manageRevertForCurrentAccount(operation);
+       }else{
            manageRevertForSavingAccount(operation);
-      // }
+       }
         return operation;
     }
 
@@ -172,10 +172,10 @@ public class OperationServiceImpl implements IOperationService {
 
     }
 
-    public void processCreditBill(Map<Integer,BigDecimal> map ){
+    public void processCreditBill(Map<Integer,Double> map ){
         LocalDate calendar =  LocalDate.now();
         map.forEach((k,v) ->this.save(new Operation(calendar.plusMonths(k),
-                v,true,OperationType.RETRIEVE, OperationSubType.Regluement_Credit,OperationStatus.TO_BE_EXECUTED),"INT")
+                BigDecimal.valueOf(v)  ,true,OperationType.RETRIEVE, OperationSubType.Regluement_Credit,OperationStatus.TO_BE_EXECUTED),"INT")
         );
     }
 }
