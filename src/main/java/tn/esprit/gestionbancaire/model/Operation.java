@@ -8,6 +8,7 @@ import tn.esprit.gestionbancaire.enums.OperationType;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Date;
 
@@ -17,7 +18,7 @@ import java.util.Date;
 public  @Data
 class Operation extends AbstractEntity implements Serializable {
 
-    private Date date;
+    private LocalDate date;
     private BigDecimal amount;
     private Boolean isInternal;
     private OperationType operationtype;
@@ -30,6 +31,15 @@ class Operation extends AbstractEntity implements Serializable {
 
     @OneToMany(mappedBy="operation")
     private Collection<Transaction> transactions;
+
+    public Operation(LocalDate date, BigDecimal v, boolean b, OperationType retrieve, OperationSubType regluement_credit, OperationStatus toBeExecuted) {
+        this.date = date;
+        this.amount = v;
+        this.isInternal = b;
+        this.operationtype = retrieve;
+        this.operationSubType = regluement_credit;
+        this.operationStatus = toBeExecuted;
+    }
 
 
 

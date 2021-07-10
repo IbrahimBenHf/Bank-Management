@@ -6,8 +6,11 @@ import org.springframework.stereotype.Service;
 import tn.esprit.gestionbancaire.exception.EntityNotFoundException;
 import tn.esprit.gestionbancaire.exception.ErrorCodes;
 import tn.esprit.gestionbancaire.model.ReclamationComment;
+import tn.esprit.gestionbancaire.model.User;
 import tn.esprit.gestionbancaire.repository.ReclamationCommentRepository;
 import tn.esprit.gestionbancaire.services.ReclamationCommentService;
+import tn.esprit.gestionbancaire.services.UserService;
+import tn.esprit.gestionbancaire.utils.Utility;
 
 import java.time.Instant;
 import java.util.List;
@@ -17,9 +20,11 @@ import java.util.List;
 public class ReclamationCommentServiceImpl implements ReclamationCommentService {
 
     private ReclamationCommentRepository reclamationCommentRepository;
+    private UserService userService;
     @Autowired
-    public ReclamationCommentServiceImpl(ReclamationCommentRepository reclamationCommentRepository) {
+    public ReclamationCommentServiceImpl(ReclamationCommentRepository reclamationCommentRepository,UserService userService) {
         this.reclamationCommentRepository = reclamationCommentRepository;
+        this.userService= userService;
     }
 
     @Override
@@ -53,6 +58,10 @@ public class ReclamationCommentServiceImpl implements ReclamationCommentService 
 
     @Override
     public void delete(Integer id) {
+//        ReclamationComment reclamationComment=findById(id);
+//        Long id_user = reclamationComment.getUserId();
+//        User user = userService.getUserById(id_user);
+//        User user = Utility.getCurrenUser();
         reclamationCommentRepository.deleteById(id);
 
     }

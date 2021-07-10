@@ -6,6 +6,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import java.math.BigDecimal;
 
 @Entity
 @Data
@@ -15,4 +16,5 @@ public class CurrentAccount extends Account {
     private static final long serialVersionUID = -5924254086339718650L;
 
     private float managementRate;
+    private BigDecimal recoveredAmount;
 }
