@@ -93,10 +93,12 @@ public class AdministrativeDocumentServiceImpl implements AdministrativeDocument
         Optional<AdministrativeDocument> administrativeDocument = administrativeDocumentRepository.findById(id);
 
         if (administrativeDocument.isPresent()) {
-            checkAuthorization(administrativeDocument.get().getCredit().getUser());
+            //checkAuthorization(administrativeDocument.get().getCredit().getUser());
             administrativeDocument.get().setCredit(null);
             administrativeDocumentRepository.save(administrativeDocument.get());
             administrativeDocumentRepository.deleteById(id);
+        }else {
+            throw new InvalidEntityException("administrativeDocument  not exist", ErrorCodes.CREDIT_NOT_VALID);
         }
 
 
