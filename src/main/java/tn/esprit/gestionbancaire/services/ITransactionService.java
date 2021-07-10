@@ -11,28 +11,27 @@ public interface ITransactionService {
 
     Transaction save(Transaction transaction);
 
-    Transaction getTransactionById(Integer id);
+    Transaction findTransactionById(Integer id);
 
     List<Transaction> getTransactionByType(TransactionType transactionType);
 
-    List<Transaction> getTransactionByOperation(long  idOperation, Boolean isNegative);
+    List<Transaction> getTransactionByOperation(long idOperation, Boolean isNegative);
+
+    List<Transaction> getTransactionByOperation(long idOperation);
 
     BigDecimal getYearlyNegBalanceByClient(long idUser, int year);
 
     Integer countNegativeTransactionBalanceByAccount(long idUser);
 
+    Integer countNegativeBalanceByClient(long idUser);
 
-
-    Integer countNegativeBalanceByUser(long idUser);
-
-    Double getAllNegativeBalance();
+    BigDecimal getAllNegativeBalance();
 
     List<Transaction> getMonthlyTransactions(Date date);
 
-    List<Transaction> getMonthlyTransactionsByClient(Date date);
+    List<Transaction> getMonthlyTransactionsByClient(Integer idClient, Date date);
 
-    Transaction RevertTransaction(Integer id);
-
+    Transaction revertTransaction(Integer id);
 
 
 }

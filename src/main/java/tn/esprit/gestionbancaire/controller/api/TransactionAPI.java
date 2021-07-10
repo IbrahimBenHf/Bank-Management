@@ -7,6 +7,8 @@ import io.swagger.annotations.ApiResponses;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import tn.esprit.gestionbancaire.enums.OperationType;
+import tn.esprit.gestionbancaire.enums.TransactionType;
 import tn.esprit.gestionbancaire.model.Transaction;
 
 import java.math.BigDecimal;
@@ -33,6 +35,12 @@ public interface TransactionAPI {
     })
     Transaction getTransactionById(@PathVariable("id") Integer id);
 
+    @GetMapping(value = APP_ROOT + "/transactions/findbytype/{type}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Get Transactions by type", notes = "This methode Get Transactions by type ", responseContainer = "List<Transaction>")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "List of Transaction / Void list")
+    })
+    List<Transaction> getTransactionBytype(@PathVariable("type") TransactionType transactionType);
 
     @GetMapping(value = APP_ROOT + "/transactions/findbyoperation/{idOperation}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Get Transactions by Operation", notes = "This methode Get Transaction by operations ", responseContainer = "List<Transaction>")
@@ -69,7 +77,7 @@ public interface TransactionAPI {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "The sum")
     })
-    Integer getAllNegativeBalance();
+    BigDecimal getAllNegativeBalance();
 
     @GetMapping(value = APP_ROOT + "/transactions/", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Get all Transactions for this month", notes = "This methode get all Transactions for this month ", responseContainer = "List<Transaction>")

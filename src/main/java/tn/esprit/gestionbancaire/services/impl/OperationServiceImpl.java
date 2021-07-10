@@ -5,21 +5,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import tn.esprit.gestionbancaire.enums.OperationStatus;
+import tn.esprit.gestionbancaire.enums.OperationSubType;
 import tn.esprit.gestionbancaire.enums.OperationType;
 import tn.esprit.gestionbancaire.enums.TransactionType;
 import tn.esprit.gestionbancaire.exception.EntityNotFoundException;
 import tn.esprit.gestionbancaire.exception.ErrorCodes;
 import tn.esprit.gestionbancaire.exception.InvalidEntityException;
 import tn.esprit.gestionbancaire.exception.InvalidOperationException;
+import tn.esprit.gestionbancaire.model.CurrentAccount;
 import tn.esprit.gestionbancaire.model.Operation;
 import tn.esprit.gestionbancaire.model.Transaction;
 import tn.esprit.gestionbancaire.repository.OperationRepository;
 import tn.esprit.gestionbancaire.services.IOperationService;
+import tn.esprit.gestionbancaire.services.ITransactionService;
 import tn.esprit.gestionbancaire.validator.OperationValidator;
 
 import java.math.BigDecimal;
-import java.util.Collection;
-import java.util.List;
+import java.time.LocalDate;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,6 +30,7 @@ import java.util.stream.Collectors;
 public class OperationServiceImpl implements IOperationService {
     @Autowired
     OperationRepository operationRepository;
+    ITransactionService transactionService;
 
     @Override
     public Operation save(Operation operation) {
@@ -36,19 +40,27 @@ public class OperationServiceImpl implements IOperationService {
             throw new InvalidEntityException("Operation is not valid", ErrorCodes.OPERATION_NOT_VALID, errors);
         }
         operation.setOperationStatus(OperationStatus.TO_BE_EXECUTED);
-        Collection<Transaction> transactions = null;
+        Collection<Transaction> transactions = new ArrayList<>();
         if(operation.getOperationtype().equals(OperationType.PAYMENT) || operation.getOperationtype().equals(OperationType.RETRIEVE)){
             if(operation.getAmount().compareTo(operation.getAccount().getBalance())>0){
-                Transaction T1 = new Transaction(operation.getDate(), TransactionType.CREDIT,false,false,operation);
-                Transaction T2 = new Transaction(operation.getDate(), TransactionType.CREDIT,true,false,operation);
+
+                Transaction T1 = new Transaction(operation.getDate(), TransactionType.CREDIT,false,false,operation, operation.getAccount().getBalance());
+                Transaction T2 = new Transaction(operation.getDate(), TransactionType.CREDIT,true,false,operation,
+                        operation.getAmount().subtract(operation.getAccount().getBalance())
+                        );
                 transactions.add(T1);
                 transactions.add(T2);
+                if(operation.getAccount() instanceof CurrentAccount){
+                    ((CurrentAccount) operation.getAccount()).setRecoveredAmount(((CurrentAccount) operation.getAccount()).getRecoveredAmount().subtract(T2.getMovement()));
+                }
+
                 operation.addTransactions(transactions);
         }else{
-                transactions.add(new Transaction(operation.getDate(), TransactionType.CREDIT,false,false,operation));
+                transactions.add(new Transaction(operation.getDate(), TransactionType.CREDIT,false,false,operation,operation.getAmount()));
                 operation.setTransactions(transactions);
             }
         }
+        operation.setOperationStatus(OperationStatus.EXECUTED);
         return operationRepository.save(operation);
     }
 
@@ -60,6 +72,11 @@ public class OperationServiceImpl implements IOperationService {
                                 "There is no Operation found with ID = " + id,
                                 ErrorCodes.OPERATION_NOT_FOUND
                         ));
+    }
+
+    @Override
+    public List<Operation> findOperationByAccount(long idAccount) {
+        return operationRepository.findAll().stream().filter(x->idAccount==x.getAccount().getId()).collect(Collectors.toList());
     }
 
     @Override
@@ -94,19 +111,35 @@ public class OperationServiceImpl implements IOperationService {
         Collection<Operation> operations = getAllOperationByClient(accountNumber);
         return operations.stream().filter(x -> x.getOperationStatus().equals(operationStatus)).collect(Collectors.toList());
     }
-    // TODO REVERT This
-    @Override
-    public void revertOperation(Operation operation, Boolean isNegativeTx, boolean isDebit) {
-       operation.setOperationStatus(OperationStatus.CANCELLED);
-       if(isDebit){
-           operation.getAccount().setBalance(operation.getAccount().getBalance().add(operation.getAmount()));
-       }else{
-           operation.getAccount().setBalance(operation.getAccount().getBalance().add(operation.getAmount().negate()));
-           if(isNegativeTx){
-               // add amount to recover
-           }
-       }
 
+    @Override
+    public Operation revertOperation(Integer idOperation) {
+        Operation operation = this.findOperationById(idOperation);
+       operation.setOperationStatus(OperationStatus.CANCELLED);
+       if(operation.getAccount() instanceof CurrentAccount){
+           manageRevertForCurrentAccount(operation);
+       }else{
+           manageRevertForSavingAccount(operation);
+       }
+        return operation;
+    }
+
+    private void manageRevertForSavingAccount(Operation operation) {
+        List<Transaction> transactions = transactionService.getTransactionByOperation(operation.getId(),false);
+        for (Transaction t : transactions){
+            if(t.getTransactionType().equals(TransactionType.CREDIT)) {
+                operation.getAccount().setBalance(operation.getAccount().getBalance().add(operation.getAmount()));
+            }else{
+                operation.getAccount().setBalance(operation.getAccount().getBalance().add(operation.getAmount().negate()));
+            }
+            transactionService.revertTransaction(t.getId());
+        }
+    }
+
+
+    private void manageRevertForCurrentAccount(Operation operation) {
+        manageRevertForSavingAccount(operation);
+        List<Transaction> transactions = transactionService.getTransactionByOperation(operation.getId(),true);
     }
 
     private void checkIdOperation(Integer idopt) {
@@ -124,5 +157,12 @@ public class OperationServiceImpl implements IOperationService {
                     ErrorCodes.CREDIT_NON_MODIFIABLE);
         }
 
+    }
+
+    public void processCreditBill(Map<Integer,BigDecimal> map ){
+        LocalDate calendar =  LocalDate.now();
+        map.forEach((k,v) ->this.save(new Operation(calendar.plusMonths(k),
+                v,true,OperationType.RETRIEVE, OperationSubType.Regluement_Credit,OperationStatus.TO_BE_EXECUTED))
+        );
     }
 }

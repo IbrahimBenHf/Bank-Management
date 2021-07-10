@@ -5,9 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import tn.esprit.gestionbancaire.controller.api.OperationAPI;
 import tn.esprit.gestionbancaire.enums.OperationStatus;
-import tn.esprit.gestionbancaire.model.Currency;
 import tn.esprit.gestionbancaire.model.Operation;
-import tn.esprit.gestionbancaire.services.ICurrencyService;
 import tn.esprit.gestionbancaire.services.IOperationService;
 
 import java.util.List;
@@ -45,9 +43,9 @@ public class OperationController implements OperationAPI {
     public List<Operation> getAllOperationByClientAndStatus(Integer id, OperationStatus operationStatus) {
         return operationService.getAllOperationByClientAndStatus(id,operationStatus);
     }
-    // TODO Tomorrow
+
     @Override
     public ResponseEntity<Operation> revert(Integer idOperation) {
-        return null;
+        return ResponseEntity.ok(operationService.revertOperation(idOperation));
     }
 }

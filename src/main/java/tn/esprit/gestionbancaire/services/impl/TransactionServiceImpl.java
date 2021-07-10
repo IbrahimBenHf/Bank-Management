@@ -11,9 +11,7 @@ import tn.esprit.gestionbancaire.exception.InvalidOperationException;
 import tn.esprit.gestionbancaire.model.Operation;
 import tn.esprit.gestionbancaire.model.Transaction;
 import tn.esprit.gestionbancaire.repository.TransactionRepository;
-import tn.esprit.gestionbancaire.services.IOperationService;
-import tn.esprit.gestionbancaire.services.ITransactionService;
-import tn.esprit.gestionbancaire.services.IUserService;
+import tn.esprit.gestionbancaire.services.*;
 import tn.esprit.gestionbancaire.validator.TransactionValidator;
 
 import java.math.BigDecimal;
@@ -28,8 +26,8 @@ public class TransactionServiceImpl implements ITransactionService {
     @Autowired
     TransactionRepository transactionRepository;
     IOperationService operationService;
-    IUserService userService;
-
+    AccountService accountService;
+    ClientService clientService;
 
     @Override
     public Transaction save(Transaction transaction) {
@@ -42,7 +40,7 @@ public class TransactionServiceImpl implements ITransactionService {
     }
 
     @Override
-    public Transaction getTransactionById(Integer id) {
+    public Transaction findTransactionById(Integer id) {
         return transactionRepository.findById(id).orElseThrow(() ->
                 new EntityNotFoundException(
                         "There is no Transaction found with ID = " + id,
@@ -62,6 +60,11 @@ public class TransactionServiceImpl implements ITransactionService {
     }
 
     @Override
+    public List<Transaction> getTransactionByOperation(long idOperation) {
+        return transactionRepository.findAll().stream().filter(x -> x.getOperation().getId() == idOperation).collect(Collectors.toList());
+    }
+
+    @Override
     public BigDecimal getYearlyNegBalanceByClient(long idUser, int year) {
 
         List<Operation> OpByUser = operationService.getAllOperationByClient(idUser)
@@ -74,37 +77,47 @@ public class TransactionServiceImpl implements ITransactionService {
 
     @Override
     public Integer countNegativeTransactionBalanceByAccount(long idAccount) {
-       return null;
+        int a = 0;
+       List <Operation> operations = operationService.findOperationByAccount(idAccount);
+       for(Operation o : operations){
+          List<Transaction> transactions = this.getTransactionByOperation(o.getId(),true);
+          a +=  transactions.size();
+       }
+       return a;
     }
 
     @Override
-    public Integer countNegativeBalanceByUser(long idUser) {
-        return null;
+    public Integer countNegativeBalanceByClient(long idClient) {
+
+        return null; //clientService.findById(idClient);
     }
 
     @Override
-    public Double getAllNegativeBalance() {
-        return null;
+    public BigDecimal getAllNegativeBalance() {
+        BigDecimal a = BigDecimal.ZERO;
+      List<Transaction> transactions = transactionRepository.findAll().stream().filter(x-> x.getIsNegativeTx()).collect(Collectors.toList());
+      for(Transaction t : transactions){
+          a.add(t.getOperation().getAmount());
+      }
+      return a;
     }
 
     @Override
     public List<Transaction> getMonthlyTransactions(Date date) {
-        return  transactionRepository.findAll().stream().filter(x -> x.getDate().getMonth() == (date.getMonth())).collect(Collectors.toList());
+        return  transactionRepository.findAll().stream().filter(x -> x.getDate().getMonth().equals(date.getMonth())).collect(Collectors.toList());
     }
 
     @Override
-    public List<Transaction> getMonthlyTransactionsByClient(Date date) {
+    public List<Transaction> getMonthlyTransactionsByClient(Integer id,Date date) {
         return null;
     }
 
-    // TODO
+
     @Override
-    public Transaction RevertTransaction(Integer id) {
+    public Transaction revertTransaction(Integer id) {
         checkIdTransaction(id);
-        Transaction t = this.getTransactionById(id);
+        Transaction t = this.findTransactionById(id);
         t.setIsRevertedTransaction(true);
-        Operation o = operationService.findOperationById(id);
-        operationService.revertOperation(t.getOperation(), t.getIsNegativeTx(), !t.getTransactionType().equals(TransactionType.CREDIT));
         return t;
 
     }

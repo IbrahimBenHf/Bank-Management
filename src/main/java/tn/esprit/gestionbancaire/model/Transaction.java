@@ -5,6 +5,8 @@ import tn.esprit.gestionbancaire.enums.TransactionType;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -12,20 +14,22 @@ import java.util.Date;
 public class Transaction extends AbstractEntity implements Serializable {
 
 
-    private Date date;
+    private LocalDate date;
     private TransactionType transactionType;
     private Boolean isNegativeTx;
     private Boolean isRevertedTransaction;
+    private BigDecimal movement;
 
     @ManyToOne
     @JoinColumn(name = "Operation_Id")
     private Operation operation;
 
-    public Transaction(Date date, TransactionType txtype, boolean b, boolean b1, Operation operation) {
+    public Transaction(LocalDate date, TransactionType txtype, boolean b, boolean b1, Operation operation, BigDecimal m) {
         this.date = date;
         this.transactionType =txtype;
         this.isNegativeTx = b1;
         this.operation = operation;
+        this.movement = m;
     }
 
     public Transaction() {
