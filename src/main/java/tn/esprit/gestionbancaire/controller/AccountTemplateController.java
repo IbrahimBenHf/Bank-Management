@@ -11,6 +11,7 @@ import tn.esprit.gestionbancaire.model.AccountTemplate;
 import tn.esprit.gestionbancaire.services.AccountTemplateService;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class AccountTemplateController implements AccountTemplateApi {
@@ -54,5 +55,10 @@ public class AccountTemplateController implements AccountTemplateApi {
         } catch (EntityNotFoundException e) {
             return new ResponseEntity<>(e.getErrorCode(), HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @Override
+    public Map<String, Integer> getAccountsPerTemplate(){
+        return accountTemplateService.accountsPerTemplate();
     }
 }

@@ -1,5 +1,7 @@
 package tn.esprit.gestionbancaire.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -40,6 +42,7 @@ public abstract class Account implements Serializable {
     private AccountTemplate accountTemplate;
 
     @OneToMany(mappedBy = "account")
+    @JsonBackReference
     private List<Card> cards;
 
     @ManyToOne

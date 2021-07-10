@@ -12,6 +12,7 @@ import tn.esprit.gestionbancaire.repository.SavingsAccountRepository;
 import tn.esprit.gestionbancaire.services.AccountService;
 import tn.esprit.gestionbancaire.utils.AccountNumberGenerator;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Optional;
 
@@ -60,6 +61,7 @@ public class AccountServiceImpl implements AccountService {
         account.setClient(accountRequest.getClient());
         account.setAccountTemplate(accountRequest.getAccountTemplate());
         account.setCreationDate(new Date());
+        account.setBalance(BigDecimal.ZERO);
         if (account instanceof CurrentAccount){
             return currentAccountRepository.save((CurrentAccount)account);
         }
