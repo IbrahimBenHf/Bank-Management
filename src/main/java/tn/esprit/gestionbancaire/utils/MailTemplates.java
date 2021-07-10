@@ -1,6 +1,8 @@
 package tn.esprit.gestionbancaire.utils;
 
+import tn.esprit.gestionbancaire.enums.CreditStatus;
 import tn.esprit.gestionbancaire.enums.ReclamationStatus;
+import tn.esprit.gestionbancaire.model.Credit;
 
 public interface MailTemplates {
     String WELCOME = "Welcome to our Bank.";
@@ -26,5 +28,20 @@ public interface MailTemplates {
         return "Hello, \nYour reclamation '"+title+"' has been fixed and updated with the status "+ reclamationStatus.toString()+". " +
                 "you can check it on our website for further information."
                 + "\nThank you for your trust.";
+    }
+    static String creditStatusUpdatedTemplate(Credit credit, CreditStatus creditStatus){
+        return "Hello "+credit.getCreditTemplate().getTitle() +" \n" +
+                " \n" +
+                "Your credit request status has been updated to "+ creditStatus.toString() +"\n" +
+                " \n" +
+                "Thanks for your trust.";
+    }
+
+    static String creditRequestCreated(Credit credit){
+        return "Hello "+credit.getCreditTemplate().getTitle() +" \n" +
+                " \n" +
+                "Your credit request has been created \n" +
+                " \n" +
+                "Thanks for your trust.";
     }
 }
