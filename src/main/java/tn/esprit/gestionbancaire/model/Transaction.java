@@ -1,6 +1,10 @@
 package tn.esprit.gestionbancaire.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import tn.esprit.gestionbancaire.enums.TransactionType;
 
 import javax.persistence.*;
@@ -20,15 +24,17 @@ public class Transaction extends AbstractEntity implements Serializable {
     private Boolean isRevertedTransaction;
     private BigDecimal movement;
 
-    @ManyToOne
-    @JoinColumn(name = "Operation_Id")
+
+    @ManyToOne()
+    @JoinColumn(name = "operation_id")
+    @JsonBackReference
     private Operation operation;
 
     public Transaction(LocalDate date, TransactionType txtype, boolean b, boolean b1, Operation operation, BigDecimal m) {
         this.date = date;
         this.transactionType =txtype;
         this.isNegativeTx = b1;
-        this.operation = operation;
+      this.operation = operation;
         this.movement = m;
     }
 

@@ -17,13 +17,13 @@ import static tn.esprit.gestionbancaire.utils.Constants.APP_ROOT;
 @Api("operations")
 public interface OperationAPI {
 
-    @PostMapping(value = APP_ROOT + "/operations/create" , consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = APP_ROOT + "/operations/create/{accountNumber}" , consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "add a Operation", notes = "this methode can add new Operation", response = Operation.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Operation Object added "),
             @ApiResponse(code = 400, message = "Operation Object is invalid")
     })
-    ResponseEntity<Operation> save(@RequestBody Operation operation);
+    ResponseEntity<Operation> save(@PathVariable("accountNumber") String accountNumber ,@RequestBody Operation operation);
 
     @PatchMapping(value = APP_ROOT + "/operations/update/status/{idOperation}" , produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Modify credit status", notes = "this methode can modify operations status", response = Operation.class)
@@ -31,7 +31,7 @@ public interface OperationAPI {
             @ApiResponse(code = 200, message = "operation status modified "),
             @ApiResponse(code = 400, message = "operation status is invalid")
     })
-    ResponseEntity<Operation> updateCreditStatus(@PathVariable("idOperation") Integer idCredit, @RequestParam("status") OperationStatus operationStatus);
+        ResponseEntity<Operation> updateCreditStatus(@PathVariable("idOperation") Integer idCredit, @RequestParam("status") OperationStatus operationStatus);
 
     @GetMapping(value = APP_ROOT + "/operations/findbyid/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Get Operation by id", notes = "This methode Get Operation by id ", responseContainer = "Operation")
@@ -61,12 +61,12 @@ public interface OperationAPI {
     })
     List<Operation> getAllOperationByClientAndStatus(@PathVariable("id") Integer id,@PathVariable("status") OperationStatus operationStatus);
 
-    @PostMapping(value = APP_ROOT + "/operations/revert" , consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PatchMapping(value = APP_ROOT + "/operations/revert/{idOperation}" , consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "revert an Operation", notes = "this methode can revert an Operation", response = Operation.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Operation Object added "),
             @ApiResponse(code = 400, message = "Operation Object is invalid")
     })
-    ResponseEntity<Operation> revert(@RequestBody Integer idOperation);
+    ResponseEntity<Operation> revert(@PathVariable("idOperation")  Integer idOperation);
 
 }

@@ -15,6 +15,7 @@ import tn.esprit.gestionbancaire.services.*;
 import tn.esprit.gestionbancaire.validator.TransactionValidator;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 import java.util.function.Consumer;
@@ -36,6 +37,8 @@ public class TransactionServiceImpl implements ITransactionService {
             log.error("transaction is not valid {}", transaction);
             throw new InvalidEntityException("Operation is not valid", ErrorCodes.OPERATION_NOT_VALID, errors);
         }
+        transaction.setCreationDate(Instant.now());
+        transaction.setTransactionType(TransactionType.DEBIT);
         return transactionRepository.save(transaction);
     }
 

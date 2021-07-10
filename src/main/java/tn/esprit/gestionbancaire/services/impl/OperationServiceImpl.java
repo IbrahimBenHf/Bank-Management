@@ -21,6 +21,7 @@ import tn.esprit.gestionbancaire.services.ITransactionService;
 import tn.esprit.gestionbancaire.validator.OperationValidator;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -30,37 +31,57 @@ import java.util.stream.Collectors;
 public class OperationServiceImpl implements IOperationService {
     @Autowired
     OperationRepository operationRepository;
-    ITransactionService transactionService;
+    @Autowired
+    TransactionServiceImpl transactionService ;
+    @Autowired
+    AccountServiceImpl accountService;
 
     @Override
-    public Operation save(Operation operation) {
+    public Operation save(Operation operation,String x) {
         List<String> errors = OperationValidator.validate(operation);
         if (!errors.isEmpty()) {
             log.error("Operation is not valid {}", operation);
             throw new InvalidEntityException("Operation is not valid", ErrorCodes.OPERATION_NOT_VALID, errors);
         }
         operation.setOperationStatus(OperationStatus.TO_BE_EXECUTED);
+        operation.setCreationDate(Instant.now());
+        operation.setAccount(accountService.findByAccountNumber(x));
         Collection<Transaction> transactions = new ArrayList<>();
         if(operation.getOperationtype().equals(OperationType.PAYMENT) || operation.getOperationtype().equals(OperationType.RETRIEVE)){
-            if(operation.getAmount().compareTo(operation.getAccount().getBalance())>0){
+            if(!operation.getOperationSubType().equals(OperationSubType.Regluement_Credit)){
+                if(operation.getAmount().compareTo(operation.getAccount().getBalance())>0){
+                    Operation o = operationRepository.save(operation);
+                    Transaction T1 = new Transaction(operation.getDate(), TransactionType.CREDIT,false,false,o, operation.getAccount().getBalance());
+                    Transaction T2 = transactionService.save(new Transaction(operation.getDate(), TransactionType.CREDIT,true,false,o,
+                            operation.getAmount().subtract(operation.getAccount().getBalance()))
+                    );
+                    transactions.add(T1);
+                    transactions.add(T2);
+                    operation.setTransactions(transactions);
 
-                Transaction T1 = new Transaction(operation.getDate(), TransactionType.CREDIT,false,false,operation, operation.getAccount().getBalance());
-                Transaction T2 = new Transaction(operation.getDate(), TransactionType.CREDIT,true,false,operation,
-                        operation.getAmount().subtract(operation.getAccount().getBalance())
-                        );
-                transactions.add(T1);
-                transactions.add(T2);
-                if(operation.getAccount() instanceof CurrentAccount){
-                    ((CurrentAccount) operation.getAccount()).setRecoveredAmount(((CurrentAccount) operation.getAccount()).getRecoveredAmount().subtract(T2.getMovement()));
-                }
+                }else{
+                    Operation o = operationRepository.save(operation);
+                    Transaction t1  =transactionService.save(new Transaction(operation.getDate(), TransactionType.CREDIT,false,false,o,operation.getAmount()));
+                    operation.setTransactions(transactions);
+                    transactions.add(t1);
 
-                operation.addTransactions(transactions);
-        }else{
-                transactions.add(new Transaction(operation.getDate(), TransactionType.CREDIT,false,false,operation,operation.getAmount()));
+                }}else{
+                Operation o = operationRepository.save(operation);
+                Transaction t1  =transactionService.save(new Transaction(operation.getDate(), TransactionType.CREDIT,false,false,o,operation.getAmount()));
                 operation.setTransactions(transactions);
+                transactions.add(t1);
+
             }
+
+        }else{
+            Operation o = operationRepository.save(operation);
+            Transaction t1 = transactionService.save(new Transaction(operation.getDate(), TransactionType.DEBIT,false,false,o, operation.getAmount()));
+            transactions.add(t1);
+            operation.setTransactions(transactions);
+
         }
         operation.setOperationStatus(OperationStatus.EXECUTED);
+
         return operationRepository.save(operation);
     }
 
@@ -84,7 +105,7 @@ public class OperationServiceImpl implements IOperationService {
         checkIdOperation(IdOperation);
         checkStatus(operationStatus);
         if (operationStatus.equals(OperationStatus.EXECUTED) || operationStatus.equals(OperationStatus.CANCELLED)) {
-            Operation o = operationRepository.getById(IdOperation);
+           Operation o = this.findOperationById(IdOperation);
             o.setOperationStatus(operationStatus);
             return o;
         }
@@ -117,7 +138,7 @@ public class OperationServiceImpl implements IOperationService {
         Operation operation = this.findOperationById(idOperation);
        operation.setOperationStatus(OperationStatus.CANCELLED);
        if(operation.getAccount() instanceof CurrentAccount){
-           manageRevertForCurrentAccount(operation);
+        manageRevertForCurrentAccount(operation);
        }else{
            manageRevertForSavingAccount(operation);
        }
@@ -159,10 +180,10 @@ public class OperationServiceImpl implements IOperationService {
 
     }
 
-    public void processCreditBill(Map<Integer,BigDecimal> map ){
+    public void processCreditBill(Map<Integer,Double> map ){
         LocalDate calendar =  LocalDate.now();
         map.forEach((k,v) ->this.save(new Operation(calendar.plusMonths(k),
-                v,true,OperationType.RETRIEVE, OperationSubType.Regluement_Credit,OperationStatus.TO_BE_EXECUTED))
+                BigDecimal.valueOf(v)  ,true,OperationType.RETRIEVE, OperationSubType.Regluement_Credit,OperationStatus.TO_BE_EXECUTED),"INT")
         );
     }
 }

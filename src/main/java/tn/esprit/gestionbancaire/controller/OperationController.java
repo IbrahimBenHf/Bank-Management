@@ -15,8 +15,8 @@ public class OperationController implements OperationAPI {
     @Autowired
     IOperationService operationService;
     @Override
-    public ResponseEntity<Operation> save(Operation operation) {
-        return ResponseEntity.ok(operationService.save(operation));
+    public ResponseEntity<Operation> save(String x , Operation operation) {
+        return ResponseEntity.ok(operationService.save(operation,x));
     }
 
     @Override

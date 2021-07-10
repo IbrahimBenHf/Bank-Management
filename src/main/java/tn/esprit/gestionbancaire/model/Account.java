@@ -3,6 +3,8 @@ package tn.esprit.gestionbancaire.model;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -48,6 +50,8 @@ public abstract class Account implements Serializable {
     @ManyToOne
     private Client client;
 
-    @OneToMany(mappedBy="account")
+    @OneToMany(mappedBy="account",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @Fetch(value = FetchMode.SUBSELECT)
+    @JsonManagedReference
     private Collection<Operation> operations;
 }

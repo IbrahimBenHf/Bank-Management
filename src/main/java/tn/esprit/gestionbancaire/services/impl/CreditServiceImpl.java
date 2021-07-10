@@ -34,16 +34,19 @@ public class CreditServiceImpl implements CreditService {
     private CreditSimulateurService creditSimulateurService;
     private MailService mailService;
     private CreditTemplateService creditTemplateService;
+    private IOperationService operationService;
 
     @Autowired
     public CreditServiceImpl(CreditRepository creditRepository,
                              @Lazy CreditSimulateurService creditSimulateurService,
                              MailService mailService,
-                             CreditTemplateService creditTemplateService) {
+                             CreditTemplateService creditTemplateService,
+                             IOperationService operationService) {
         this.creditRepository = creditRepository;
         this.creditSimulateurService = creditSimulateurService;
         this.mailService = mailService;
         this.creditTemplateService = creditTemplateService;
+        this.operationService = operationService;
 
     }
 
@@ -94,8 +97,10 @@ public class CreditServiceImpl implements CreditService {
             }
             log.info(""+ similation);
             //call operation service
+            operationService.processCreditBill(similation);
             credit.setCreditStatus(creditStatus);
             credit.setArchived(true);
+            //operationService.p
             mailService.creditNotify(credit,creditStatus);
         }else if(creditStatus.equals(CreditStatus.REFUSED)){
             credit = checkCreditStatus(idCredit);
