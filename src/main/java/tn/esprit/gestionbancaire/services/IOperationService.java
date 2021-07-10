@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface IOperationService {
 
-    Operation save(Operation operation);
+    Operation save(Operation operation, String x);
 
     Operation findOperationById(Integer id);
 
