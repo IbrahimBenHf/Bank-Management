@@ -10,6 +10,7 @@ import tn.esprit.gestionbancaire.exception.InvalidOperationException;
 import tn.esprit.gestionbancaire.model.Credit;
 import tn.esprit.gestionbancaire.model.User;
 import tn.esprit.gestionbancaire.services.*;
+import tn.esprit.gestionbancaire.utils.Utility;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -108,6 +109,7 @@ public class CreditSimulateurServiceImpl implements CreditSimulateurService {
     //for admin
     @Override
     public Map<Integer, Double> prsonalCredit(double creditAmout, Integer repaymentPeriod, double rate) {
+        isAdmin();
         double min = creditTemplateService.findCreditTemplateByTitle("Personal").getMinValue();
         double max = creditTemplateService.findCreditTemplateByTitle("Personal").getMaxValue();
         if (creditAmout < min || creditAmout > max) {
@@ -129,6 +131,7 @@ public class CreditSimulateurServiceImpl implements CreditSimulateurService {
     //for admin
     @Override
     public Map<Integer, Double> vehicleCredit(double vehicleAmout, Integer vehicleFiscalPower, double selfFinancing, Integer repaymentPeriod, double rate) {
+        isAdmin();
         double additionalRate;
         //User user = userService.getCurentUser();
         if (selfFinancing < vehicleAmout * MIN_SELF_FINANCING) {
@@ -231,5 +234,12 @@ public class CreditSimulateurServiceImpl implements CreditSimulateurService {
         return map;
     }
 
+    private void isAdmin() {
+        User currentUser = Utility.getCurrenUser().getUser();
+        if(!currentUser.getRoles().equals("admin")) {
+            throw new InvalidOperationException("UNAUTHORIZED USER MUST BE ADMIN",
+                    ErrorCodes.UNAUTHORIZED);
+        }
+    }
 
 }
