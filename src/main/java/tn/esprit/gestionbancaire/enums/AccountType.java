@@ -1,6 +1,15 @@
 package tn.esprit.gestionbancaire.enums;
 
-public enum AccountType {
+import com.fasterxml.jackson.annotation.JsonValue;
+
+import java.io.Serializable;
+
+public enum AccountType implements Serializable {
     CURRENT,
-    SAVINGS
+    SAVINGS;
+
+    @JsonValue
+    public String getType() {
+        return this.name();
+    }
 }

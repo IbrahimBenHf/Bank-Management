@@ -7,5 +7,7 @@ import tn.esprit.gestionbancaire.model.Client;
 
 @Repository
 public interface ClientRepository extends JpaRepository<Client,Long>{
+	
+	public Client findBynID(String cin);
 
 }

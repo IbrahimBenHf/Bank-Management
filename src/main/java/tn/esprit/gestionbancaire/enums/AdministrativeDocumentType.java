@@ -1,4 +1,4 @@
-package tn.esprit.gestionbancaire.model;
+package tn.esprit.gestionbancaire.enums;
 
 public enum AdministrativeDocumentType {
     INSURANCE,

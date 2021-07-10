@@ -6,20 +6,19 @@ import static java.util.Calendar.YEAR;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 @Entity
 @NoArgsConstructor
@@ -39,17 +38,28 @@ public class User extends AbstractEntity{
 	@Column(name = "active")
 	private Boolean active;
 
-	
+	@OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@Fetch(value = FetchMode.SUBSELECT)
+	@JsonManagedReference
+	private List<Credit> credits;
+
     @OneToOne(fetch = FetchType.EAGER, optional = true)
     @JoinColumn(name = "client_id", nullable = true)
 
 	private Client client;
-    
+
 	@Column(name = "roles")
 	private String roles;
 
+	public User(String userName, String password, Boolean active, Client client, String roles) {
+		this.userName = userName;
+		this.password = password;
+		this.active = active;
+		this.client = client;
+		this.roles = roles;
+	}
 	// getters and setters
-	
+
 	public int getAge() {
 		Calendar a = getCalendar(client.getBirthDate());
 		Calendar b = getCalendar(new Date());
@@ -68,6 +78,6 @@ public class User extends AbstractEntity{
 	}
 
 
-	
+
 
 }

@@ -43,7 +43,7 @@ public class Client implements Serializable {
 	private CivilState civilState;
     @OneToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "user_id", nullable = true)
-    
+
     User user;
 	public Client(String nID, String firstName, String lastName, Date birthDate, String job, boolean validated,
 			Sexe sexe, CivilState civilState) {
@@ -57,6 +57,5 @@ public class Client implements Serializable {
 		this.sexe = sexe;
 		this.civilState = civilState;
 	}
-    
-}
 
+}

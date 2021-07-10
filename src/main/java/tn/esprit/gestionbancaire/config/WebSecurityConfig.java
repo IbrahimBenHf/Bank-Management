@@ -60,8 +60,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		// We don't need CSRF for this example
 		httpSecurity.csrf().disable()
 				// dont authenticate this particular request
-				.authorizeRequests().antMatchers("/gestionbancaire/**").authenticated().
-				antMatchers("/user").hasAuthority("admin").
+				.authorizeRequests().antMatchers("/gestionbancaire/v1/user/getAll/**").hasAuthority("admin").
 				// all other requests need to be authenticated
 				antMatchers("/swagger-ui.html/**").permitAll().and().
 				// make sure we use stateless session; session won't be used to
