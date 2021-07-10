@@ -63,4 +63,10 @@ public interface ReclamationAPI {
     })
     List<Reclamation> findAll();
 
+    @PostMapping(value = APP_ROOT + "/Reclamations/stats")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "List of Reclamations / Void list")
+    })
+    void getStats();
+
 }

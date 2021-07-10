@@ -64,6 +64,11 @@ public class ReclamationServiceImpl implements ReclamationService {
         return reclamationRepository.findAll();
     }
 
+    @Override
+    public void getReclamationStats() {
+        mailService.sendStats(reclamationRepository.findAll());
+    }
+
     public List<Reclamation> findAllByStatus(ReclamationStatus reclamationStatus){
         return reclamationRepository.findAllByStatus(reclamationStatus);
     }

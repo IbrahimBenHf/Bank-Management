@@ -47,4 +47,9 @@ public class ReclamationController implements ReclamationAPI {
     public List<Reclamation> findAll() {
         return reclamationService.findAll();
     }
+
+    @Override
+    public void getStats() {
+         reclamationService.getReclamationStats();
+    }
 }

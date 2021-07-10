@@ -18,4 +18,6 @@ public interface ReclamationService {
     List<Reclamation> findAllByStatus(ReclamationStatus reclamationStatus);
 
     void delete(Integer id);
+
+    void getReclamationStats();
 }
