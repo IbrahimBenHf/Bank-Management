@@ -22,52 +22,49 @@ import tn.esprit.gestionbancaire.services.IUserService;
 import tn.esprit.gestionbancaire.utils.Constants;
 
 @RestController()
-@RequestMapping(Constants.APP_ROOT+"/user")
+@RequestMapping(Constants.APP_ROOT + "/user")
 
 public class UserController {
 
-	@Autowired  
+	@Autowired
 	IUserService userService;
-	@Autowired  
+	@Autowired
 	ClientRepository clientRepository;
-	
-	@GetMapping("/getAll")  
-	private ResponseEntity<List<User>> getAll()   
-	{  
+
+	@GetMapping("/getAll")
+	private ResponseEntity<List<User>> getAll() {
 		return new ResponseEntity<List<User>>(userService.getAll(), HttpStatus.OK);
-	} 
-	@GetMapping("/getUsersByProfession")  
-	private ResponseEntity<Map<String,List<User>>> getUsersByProfession()   
-	{  
-		return new ResponseEntity<Map<String,List<User>>>(userService.getUsersByProfession(), HttpStatus.OK);
-	} 
-	@GetMapping("/userById/{id}")  
-	private ResponseEntity<User> getUserById(@PathVariable("id") Long id)   
-	{  
+	}
+
+	@GetMapping("/getUsersByProfession")
+	private ResponseEntity<Map<String, List<User>>> getUsersByProfession() {
+		return new ResponseEntity<Map<String, List<User>>>(userService.getUsersByProfession(), HttpStatus.OK);
+	}
+
+	@GetMapping("/userById/{id}")
+	private ResponseEntity<User> getUserById(@PathVariable("id") Long id) {
 		return new ResponseEntity<User>(userService.getUserById(id), HttpStatus.OK);
-	}  
-	@DeleteMapping("/deleteUser/{id}")  
-	private void deleteBook(@PathVariable("id") Long id)   
-	{  
+	}
+
+	@DeleteMapping("/deleteUser/{id}")
+	private void deleteBook(@PathVariable("id") Long id) {
 		userService.deleteUser(id);
-	}  
-	//creating post mapping that post the book detail in the database  
-	@PostMapping("/userRequest/{cin}")  
-	private ResponseEntity<User> saveBook(@RequestBody User user,@PathVariable("cin") String cin)   
-	{  
+	}
+
+	// creating post mapping that post the book detail in the database
+	@PostMapping("/userRequest/{cin}")
+	private ResponseEntity<User> saveBook(@RequestBody User user, @PathVariable("cin") String cin) {
 		Client client = clientRepository.findBynID(cin);
-		if(client!=null)
-		{
+		if (client != null) {
 			user.setClient(client);
 			return new ResponseEntity<User>(userService.saveUser(user), HttpStatus.OK);
-		}
-		else
+		} else
 			return new ResponseEntity("Cin not related to client", HttpStatus.FORBIDDEN);
-	}  
-	//creating put mapping that updates the book detail   
-	@PutMapping("/updateUser")  
-	private ResponseEntity<User> update(@RequestBody User user)   
-	{  
+	}
+
+	// creating put mapping that updates the book detail
+	@PutMapping("/updateUser")
+	private ResponseEntity<User> update(@RequestBody User user) {
 		return new ResponseEntity<User>(userService.updateUser(user), HttpStatus.OK);
-	}  
+	}
 }
