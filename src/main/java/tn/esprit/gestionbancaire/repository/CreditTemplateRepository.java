@@ -9,4 +9,5 @@ import java.util.List;
 public interface CreditTemplateRepository extends JpaRepository<CreditTemplate, Long> {
 
     List<CreditTemplate> findByCreditType(CreditType creditType);
+    CreditTemplate findCreditTemplateByTitle(String title);
 }

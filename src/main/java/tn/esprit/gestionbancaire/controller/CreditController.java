@@ -82,4 +82,6 @@ public class CreditController implements CreditApi {
     public Map<String,Integer> mostUsedCredit() {
         return creditService.mostOpenedCreditByType();
     }
+
+
 }

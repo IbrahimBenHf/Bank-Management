@@ -6,5 +6,6 @@ public enum CreditStatus {
     IN_PROGRESS,
     ACCEPTED,
     REFUSED,
-    WAITING
+    WAITING,
+    DELETED
 }

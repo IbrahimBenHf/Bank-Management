@@ -8,12 +8,12 @@ import tn.esprit.gestionbancaire.enums.CreditStatus;
 import tn.esprit.gestionbancaire.exception.ErrorCodes;
 import tn.esprit.gestionbancaire.exception.InvalidOperationException;
 import tn.esprit.gestionbancaire.model.Credit;
-import tn.esprit.gestionbancaire.services.CreditService;
-import tn.esprit.gestionbancaire.services.CreditSimulateurService;
-import tn.esprit.gestionbancaire.services.CreditTemplateService;
+import tn.esprit.gestionbancaire.model.User;
+import tn.esprit.gestionbancaire.services.*;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -32,20 +32,26 @@ public class CreditSimulateurServiceImpl implements CreditSimulateurService {
 
     private CreditService creditService;
     private CreditTemplateService creditTemplateService;
+    private IOperationService operationService;
+    private IUserService userService;
 
     @Autowired
     public CreditSimulateurServiceImpl(
             CreditService creditService,
-            CreditTemplateService creditTemplateService
+            CreditTemplateService creditTemplateService,
+            IOperationService operationService,
+            IUserService userService
     )
     {
         this.creditService = creditService;
         this.creditTemplateService = creditTemplateService;
+        this.operationService = operationService;
+        this.userService = userService;
     }
     @Override
     public Map<Integer, Double> prsonalCredit(double creditAmout, Integer repaymentPeriod) {
-        double min = creditTemplateService.findById(1).getMinValue();
-        double max = creditTemplateService.findById(1).getMaxValue();
+        double min = creditTemplateService.findCreditTemplateByTitle("Personal").getMinValue();
+        double max = creditTemplateService.findCreditTemplateByTitle("Personal").getMaxValue();
         if (creditAmout < min || creditAmout > max) {
             log.error("Credit Amout should less then "+max+" more then "+min+" !!", creditAmout);
             throw new InvalidOperationException("Credit Amout should less then "+max+" more then "+min+" !!", ErrorCodes.MEDIA_CREDIT_SIMILATEUR_AMOUNT);
@@ -69,7 +75,7 @@ public class CreditSimulateurServiceImpl implements CreditSimulateurService {
         //User user = userService.getCurentUser();
         if (selfFinancing < vehicleAmout * MIN_SELF_FINANCING) {
             log.error("Insufficient Self Financing", selfFinancing);
-            log.error("Self Financing should be >= ",vehicleAmout * 0.20);
+            log.error("Self Financing should be >= ",vehicleAmout * MIN_SELF_FINANCING);
             throw new InvalidOperationException("Self Financing must be >= 20% of vehicle Amout !!", ErrorCodes.CREDIT_SIMILATEUR_SELF_FINANCING_INSUFFICIENT);
         }
         if (vehicleFiscalPower <= 0 ){
@@ -91,7 +97,7 @@ public class CreditSimulateurServiceImpl implements CreditSimulateurService {
         double monthRepayment = 0.0;
         for(int i = 0; i < repaymentPeriod ; i++){
             //monthRepayment = fixedRepayment + (rest * (getUserRate(user.getScore)+additionalRate) );
-            monthRepayment = fixedRepayment + (rest * (getUserRate(25)+additionalRate) );
+            monthRepayment = fixedRepayment + (rest * (getUserRate(320)+additionalRate) );
             map.put(i+1,monthRepayment);
             rest = rest - monthRepayment;
         }
@@ -102,8 +108,8 @@ public class CreditSimulateurServiceImpl implements CreditSimulateurService {
     //for admin
     @Override
     public Map<Integer, Double> prsonalCredit(double creditAmout, Integer repaymentPeriod, double rate) {
-        double min = creditTemplateService.findById(1).getMinValue();
-        double max = creditTemplateService.findById(1).getMaxValue();
+        double min = creditTemplateService.findCreditTemplateByTitle("Personal").getMinValue();
+        double max = creditTemplateService.findCreditTemplateByTitle("Personal").getMaxValue();
         if (creditAmout < min || creditAmout > max) {
             log.error("Credit Amout should less then "+max+" more then "+min+" !!", creditAmout);
             throw new InvalidOperationException("Credit Amout should less then "+max+" more then "+min+" !!", ErrorCodes.MEDIA_CREDIT_SIMILATEUR_AMOUNT);
@@ -127,7 +133,7 @@ public class CreditSimulateurServiceImpl implements CreditSimulateurService {
         //User user = userService.getCurentUser();
         if (selfFinancing < vehicleAmout * MIN_SELF_FINANCING) {
             log.error("Insufficient Self Financing", selfFinancing);
-            log.error("Self Financing should be >= ",vehicleAmout * 0.20);
+            log.error("Self Financing should be >= ",vehicleAmout * MIN_SELF_FINANCING);
             throw new InvalidOperationException("Self Financing must be >= 20% of vehicle Amout \n Min Amount = \n "
             + vehicleAmout * 0.20 + "!!", ErrorCodes.CREDIT_SIMILATEUR_SELF_FINANCING_INSUFFICIENT);
         }
@@ -173,19 +179,18 @@ public class CreditSimulateurServiceImpl implements CreditSimulateurService {
     public Map<String,Integer> getUserStatusOverView(Integer id) {
         Integer score = 0;
         Map<String,Integer> map = new LinkedHashMap<>();
-        //User user = userService.findById(id);
+       // User user = userService.getUserById(Long.valueOf(2));
+        //log.info(user.toString());
         Credit credit = creditService.findById(id);
         //
         Instant now = Instant.now();
         //Instant creationDate = user.getCreationDate();
         Instant creationDate = credit.getCreationDate();
 
-        //long transactions = user.countCreditByUser(user);
         long days = creationDate.until(now, ChronoUnit.DAYS);
         //max point for to the oldest user 100
         if (days < 180) {
             map.put("Created", 5);
-
         }else if (days > 180) {
             map.put("Created", 20);
         }else if (days > 365) {
@@ -208,7 +213,8 @@ public class CreditSimulateurServiceImpl implements CreditSimulateurService {
         }
 
         //max point for to the overdraft 1000 in last 2 year
-        //long overdraft = user.countTransationsOverDraftByUser(user);
+        //long overdraftTotal = operationService.getYearlyNegBalanceByClient(id, Calendar.getInstance().get(Calendar.YEAR));
+        //long overdraft = operationService.countNegativeTransactionBalanceByUser(id);
         long overdraft = creditService.countCreditByCreditStatus(CreditStatus.OPEN);
         if (overdraft < 10 ){
             map.put("Overdraft", 50);

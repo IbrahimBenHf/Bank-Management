@@ -46,11 +46,11 @@ public interface CreditSimilateurApi {
     })
     Map<Integer, Double> personalCredit(@RequestParam("creditAmout") double creditAmout,@RequestParam("repaymentPeriod") Integer repaymentPeriod,@RequestParam("rate") double rate);
 
-
-    @GetMapping(value = APP_ROOT + "/creditsimilateur/creditvehiclesimilateur/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Simulate vegucles credit", notes = "Simulate vegucles credit ", responseContainer = "long")
+    @GetMapping(value = APP_ROOT + "/creditsimilateur/bi/useroverview/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "User Score Over View to validate credit", notes = "User Score Over View to validate credit ", responseContainer = "long")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Map of repayments / Void list")
+            @ApiResponse(code = 200, message = "Map of details / Void list")
     })
-    Map<String, Integer> getUserScore(@PathVariable("id") Integer id);
+    Map<String, Integer> getUserUserOverView(@PathVariable("id") Integer id);
+
 }

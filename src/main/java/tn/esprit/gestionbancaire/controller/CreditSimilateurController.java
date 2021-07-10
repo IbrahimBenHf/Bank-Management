@@ -39,7 +39,7 @@ public class CreditSimilateurController implements CreditSimilateurApi {
     }
 
     @Override
-    public Map<String, Integer> getUserScore(Integer id) {
+    public Map<String, Integer> getUserUserOverView(Integer id) {
         return creditSimulateurService.getUserStatusOverView(id);
     }
 

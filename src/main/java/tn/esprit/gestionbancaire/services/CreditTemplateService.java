@@ -16,5 +16,7 @@ public interface CreditTemplateService {
 
     CreditTemplate update(CreditTemplate creditTemplate);
 
+    CreditTemplate findCreditTemplateByTitle(String title);
+
     void delete(long id);
 }

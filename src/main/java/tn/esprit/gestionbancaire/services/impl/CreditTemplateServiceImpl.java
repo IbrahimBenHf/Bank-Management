@@ -61,6 +61,11 @@ public class CreditTemplateServiceImpl implements CreditTemplateService {
     }
 
     @Override
+    public CreditTemplate findCreditTemplateByTitle(String title) {
+        return creditTemplateRepository.findCreditTemplateByTitle(title);
+    }
+
+    @Override
     public void delete(long id) {
         Optional<CreditTemplate> byId = creditTemplateRepository.findById(id);
         if (byId.isPresent()) {

@@ -15,10 +15,7 @@ import tn.esprit.gestionbancaire.model.Credit;
 import tn.esprit.gestionbancaire.enums.CreditStatus;
 import tn.esprit.gestionbancaire.model.CreditTemplate;
 import tn.esprit.gestionbancaire.repository.CreditRepository;
-import tn.esprit.gestionbancaire.services.CreditService;
-import tn.esprit.gestionbancaire.services.CreditSimulateurService;
-import tn.esprit.gestionbancaire.services.CreditTemplateService;
-import tn.esprit.gestionbancaire.services.MailService;
+import tn.esprit.gestionbancaire.services.*;
 import tn.esprit.gestionbancaire.validator.CreditValidator;
 
 import java.time.Instant;
@@ -37,7 +34,9 @@ public class CreditServiceImpl implements CreditService {
     private CreditTemplateService creditTemplateService;
     @Autowired
     public CreditServiceImpl(CreditRepository creditRepository,
-                             @Lazy CreditSimulateurService creditSimulateurService, MailService mailService, CreditTemplateService creditTemplateService) {
+                             @Lazy CreditSimulateurService creditSimulateurService,
+                             MailService mailService,
+                             CreditTemplateService creditTemplateService) {
         this.creditRepository = creditRepository;
         this.creditSimulateurService = creditSimulateurService;
         this.mailService = mailService;
@@ -50,7 +49,7 @@ public class CreditServiceImpl implements CreditService {
     public Credit save(Credit credit) {
         List<String> errors = CreditValidator.validate(credit,creditTemplateService.findById(credit.getCreditTemplate().getId()));
         if (!errors.isEmpty()) {
-            log.error("Credit is not valid {}", credit);
+            log.error("Credit is not valid {}", errors);
             throw new InvalidEntityException("Credit is not valid", ErrorCodes.CREDIT_NOT_VALID, errors);
         }
         //if(credit.getCreditTemplate().getId() == 2){
@@ -103,7 +102,21 @@ public class CreditServiceImpl implements CreditService {
             credit.setLastModifiedDate(Instant.now());
             //send email to client
             mailService.creditNotify(credit,creditStatus);
-        }else {
+        }else if(creditStatus.equals(CreditStatus.OPEN)){
+            credit = checkCreditStatus(idCredit);
+            if (credit.getCreditStatus().equals(CreditStatus.DELETED)){
+                throw new InvalidOperationException("Credit already deleted not possible to OPEN it",
+                        ErrorCodes.CREDIT_NON_MODIFIABLE);
+            }else {
+                credit.setCreditStatus(creditStatus);
+                List<String> notes = credit.getNotes();
+                notes.add("Your Credit Request Now is :" + creditStatus);
+                credit.setNotes(notes);
+                credit.setLastModifiedDate(Instant.now());
+                //send email to client
+                mailService.creditNotify(credit, creditStatus);
+            }
+        }else{
             credit = checkCreditStatus(idCredit);
             credit.setCreditStatus(creditStatus);
             List<String> notes = credit.getNotes();
@@ -140,7 +153,7 @@ public class CreditServiceImpl implements CreditService {
 
     @Override
     public List<Credit> findAllByUser(Integer id) {
-        return creditRepository.findAllByUser(id);
+        return creditRepository.findAllByUserId(id);
     }
 
     @Override
@@ -164,12 +177,24 @@ public class CreditServiceImpl implements CreditService {
         }
         Optional<Credit> credit = creditRepository.findById(id);
 
-            if (credit.isPresent() && (credit.get().getCreditStatus().equals(CreditStatus.OPEN) || credit.get().getCreditStatus().equals(CreditStatus.IN_PROGRESS) || credit.get().getCreditStatus().equals(CreditStatus.WAITING))) {
-                throw new InvalidOperationException("Faild to delete credit, Credit must be in 'ACCEPTED' or 'REFUSED'", ErrorCodes.CREDIT_IS_NOT_CLOSED);
+            if (credit.isPresent() && !credit.get().isArchived()){
+                if((credit.get().getCreditStatus().equals(CreditStatus.ACCEPTED) || credit.get().getCreditStatus().equals(CreditStatus.REFUSED))) {
+                    throw new InvalidOperationException("Faild to delete credit, Credit must be in 'OPEN' or 'IN_PROGRESS'", ErrorCodes.CREDIT_IS_NOT_CLOSED);
+                }else {
+                    credit.get().setCreditStatus(CreditStatus.DELETED);
+                    credit.get().setArchived(true);
+                    List<String> notes = credit.get().getNotes();
+                    notes.add("Your Credit Request Now is " + CreditStatus.DELETED);
+                    credit.get().setNotes(notes);
+                    credit.get().setLastModifiedDate(Instant.now());
+                    //send email to client
+                    mailService.creditNotify(credit.get(),CreditStatus.DELETED);
+                    creditRepository.save(credit.get());
+                }
+
+            }else {
+                throw new InvalidOperationException("Faild to delete credit, Credit is not exist or already deleted", ErrorCodes.CREDIT_IS_NOT_CLOSED);
             }
-
-        creditRepository.deleteById(id);
-
     }
 
 
