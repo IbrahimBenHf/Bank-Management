@@ -1,6 +1,8 @@
 package tn.esprit.gestionbancaire.model;
 
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -17,6 +19,7 @@ import java.util.List;
 @Getter
 @Setter
 @ToString(callSuper = true)
+@EntityListeners(AuditingEntityListener.class)
 public abstract class Account implements Serializable {
 
     private static final long serialVersionUID = -4704591442705123116L;
@@ -27,6 +30,8 @@ public abstract class Account implements Serializable {
 
     private String accountNumber;
 
+    @CreatedDate
+    @Column(name = "creationDate", nullable = false, updatable = false)
     private Date creationDate;
 
     private BigDecimal balance;
@@ -38,7 +43,7 @@ public abstract class Account implements Serializable {
     private List<Card> cards;
 
     @ManyToOne
-    private User user;
+    private Client client;
 
     @OneToMany(mappedBy="account")
     private Collection<Operation> operations;

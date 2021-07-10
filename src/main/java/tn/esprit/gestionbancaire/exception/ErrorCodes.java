@@ -24,6 +24,10 @@ public enum ErrorCodes {
     CREDIT_TEMPLATE_NOT_FOUND(3000),
     CREDIT_TEMPLATE_NOT_VALID(3001),
 
+    ACCOUNT_REQUEST_NOT_FOUND(4000),
+
+    CLIENT_NOT_FOUND(5000),
+
     // ErrorCodesForCurrency&Operation&Transaction
     TX_IS_NULL(22001),
     TX_NOT_FOUND(22002),

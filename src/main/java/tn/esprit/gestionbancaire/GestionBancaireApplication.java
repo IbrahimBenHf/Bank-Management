@@ -17,8 +17,8 @@ import tn.esprit.gestionbancaire.enums.Sexe;
 import tn.esprit.gestionbancaire.model.Client;
 import tn.esprit.gestionbancaire.model.User;
 import tn.esprit.gestionbancaire.repository.UserRepository;
+import tn.esprit.gestionbancaire.services.ClientService;
 import tn.esprit.gestionbancaire.services.CreditService;
-import tn.esprit.gestionbancaire.services.IClientService;
 import tn.esprit.gestionbancaire.services.UserService;
 
 @SpringBootApplication
@@ -33,14 +33,14 @@ public class GestionBancaireApplication {
 
     }
     @Bean
-    ApplicationRunner init(UserService service,IClientService clientService) {
+    ApplicationRunner init(UserService service,ClientService clientService) {
         return args -> {
             	createUser(service,"admin",clientService);
             	createUser(service,"client",clientService);
             	createUser(service,"employe",clientService);
         };
     }
-	private void createUser(UserService service,String role, IClientService clientService) {
+	private void createUser(UserService service,String role, ClientService clientService) {
 		Optional<User> user =service.getUserByUsername(role);
 		if(user.isEmpty())
 		{

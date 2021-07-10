@@ -94,7 +94,7 @@ public class OperationServiceImpl implements IOperationService {
         Collection<Operation> operations = getAllOperationByClient(accountNumber);
         return operations.stream().filter(x -> x.getOperationStatus().equals(operationStatus)).collect(Collectors.toList());
     }
-
+    // TODO REVERT This
     @Override
     public void revertOperation(Operation operation, Boolean isNegativeTx, boolean isDebit) {
        operation.setOperationStatus(OperationStatus.CANCELLED);
