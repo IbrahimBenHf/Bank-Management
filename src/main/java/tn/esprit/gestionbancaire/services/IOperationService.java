@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface IOperationService {
 
-    Operation save(Operation operation, BigDecimal v, boolean b, OperationType retrieve, OperationSubType regluement_Credit, OperationStatus toBeExecuted);
+    Operation save(Operation operation);
 
     Operation findOperationById(Integer id);
 
@@ -25,5 +25,5 @@ public interface IOperationService {
     List<Operation> getAllOperationByClientAndStatus(long accountNumber, OperationStatus operationStatus);
 
     Operation revertOperation(Integer idOperation);
-    // map (key value ) ==> create bills
+
 }

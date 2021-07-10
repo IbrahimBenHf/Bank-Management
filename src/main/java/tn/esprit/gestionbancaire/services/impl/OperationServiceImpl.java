@@ -21,6 +21,7 @@ import tn.esprit.gestionbancaire.services.ITransactionService;
 import tn.esprit.gestionbancaire.validator.OperationValidator;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -32,7 +33,7 @@ public class OperationServiceImpl implements IOperationService {
     ITransactionService transactionService;
 
     @Override
-    public Operation save(Operation operation, BigDecimal v, boolean b, OperationType retrieve, OperationSubType regluement_Credit, OperationStatus toBeExecuted) {
+    public Operation save(Operation operation) {
         List<String> errors = OperationValidator.validate(operation);
         if (!errors.isEmpty()) {
             log.error("Operation is not valid {}", operation);
@@ -159,9 +160,9 @@ public class OperationServiceImpl implements IOperationService {
     }
 
     public void processCreditBill(Map<Integer,BigDecimal> map ){
-        Date calendar = new Date(System.currentTimeMillis());
-        map.forEach((k,v) ->this.save(new Operation(calendar.getMonth()+k),
-                v,true,OperationType.RETRIEVE, OperationSubType.Regluement_Credit,OperationStatus.TO_BE_EXECUTED)
+        LocalDate calendar =  LocalDate.now();
+        map.forEach((k,v) ->this.save(new Operation(calendar.plusMonths(k),
+                v,true,OperationType.RETRIEVE, OperationSubType.Regluement_Credit,OperationStatus.TO_BE_EXECUTED))
         );
     }
 }

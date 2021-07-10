@@ -104,7 +104,7 @@ public class TransactionServiceImpl implements ITransactionService {
 
     @Override
     public List<Transaction> getMonthlyTransactions(Date date) {
-        return  transactionRepository.findAll().stream().filter(x -> x.getDate().getMonth() == (date.getMonth())).collect(Collectors.toList());
+        return  transactionRepository.findAll().stream().filter(x -> x.getDate().getMonth().equals(date.getMonth())).collect(Collectors.toList());
     }
 
     @Override
@@ -112,7 +112,7 @@ public class TransactionServiceImpl implements ITransactionService {
         return null;
     }
 
-    // TODO
+
     @Override
     public Transaction revertTransaction(Integer id) {
         checkIdTransaction(id);
