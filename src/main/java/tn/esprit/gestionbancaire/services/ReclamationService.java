@@ -15,5 +15,9 @@ public interface ReclamationService {
 
     List<Reclamation> findAll();
 
+    List<Reclamation> findAllByStatus(ReclamationStatus reclamationStatus);
+
     void delete(Integer id);
+
+    void getReclamationStats();
 }
