@@ -97,7 +97,7 @@ public class CreditServiceImpl implements CreditService {
             }
             log.info(""+ similation);
             //call operation service
-
+            operationService.processCreditBill(similation);
             credit.setCreditStatus(creditStatus);
             credit.setArchived(true);
             //operationService.p
