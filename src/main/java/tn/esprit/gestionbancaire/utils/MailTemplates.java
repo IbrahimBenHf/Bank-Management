@@ -52,8 +52,8 @@ public interface MailTemplates {
     }
 
     static String getStats(List<Reclamation> reclamations) {
-        int reclamations_created = 0;
-        int resolved = 0;
+        double reclamations_created = 0;
+        double resolved = 0;
         int current = 0;
         int open = 0;
         for (Reclamation reclamation : reclamations) {
@@ -71,12 +71,15 @@ public interface MailTemplates {
                 open++;
             }
         }
+        double rate=0;
+        if (reclamations_created>0)
+        rate = (resolved/reclamations_created)*100;
 
-        return "Hello, \nThis month '" + reclamations_created + "' reclamations has been created with : \n" +
+        return "Hello, \nThis month '" + (int)reclamations_created + "' reclamations has been created with : \n" +
                 "=> "+open +" reclamations open \n" +
                 "=> "+current +" reclamations currently in progress \n" +
-                "=> "+resolved +" reclamations resolved \n" +
-                "Productivity rate is at "+ (resolved/reclamations_created)*100 +"% \n"+
+                "=> "+(int)resolved +" reclamations resolved \n" +
+                "Productivity rate is at "+ rate +"% \n"+
                 "Good Job :)";
     }
 }
