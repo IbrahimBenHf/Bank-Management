@@ -5,9 +5,11 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.web.bind.annotation.PostMapping;
+import tn.esprit.gestionbancaire.enums.AccountType;
 import tn.esprit.gestionbancaire.model.Credit;
 
 import java.util.List;
+import java.util.Map;
 
 import static tn.esprit.gestionbancaire.utils.Constants.APP_ROOT;
 
@@ -19,5 +21,12 @@ public interface BatchApi {
             @ApiResponse(code = 200, message = "List of credits / Void list")
     })
     List<Credit> autoValidatorBatch();
+
+    @PostMapping(value = APP_ROOT + "/batch/cardfees")
+    @ApiOperation(value = "", notes = " ")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "")
+    })
+    Map<AccountType, Integer> autoSubtractCardFees();
 
 }

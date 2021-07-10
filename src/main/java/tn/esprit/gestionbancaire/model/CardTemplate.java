@@ -21,7 +21,7 @@ public class CardTemplate extends Product {
 
     private boolean forBusiness;
 
-    private float cardFees;
+    private double cardFees;
 
     public static List<String> getNullableAttributes(){
         return new ArrayList<>();

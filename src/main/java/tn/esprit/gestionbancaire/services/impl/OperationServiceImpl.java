@@ -51,8 +51,11 @@ public class OperationServiceImpl implements IOperationService {
             if(operation.getAmount().compareTo(operation.getAccount().getBalance())>0){
                 Operation o = operationRepository.save(operation);
               Transaction T1 = new Transaction(operation.getDate(), TransactionType.CREDIT,false,false,o, operation.getAccount().getBalance());
-                Transaction T2 = transactionService.save(new Transaction(operation.getDate(), TransactionType.CREDIT,true,false,o,
-                        operation.getAmount().subtract(operation.getAccount().getBalance()))
+              T1.setCreationDate(Instant.now());
+                Transaction transaction = new Transaction(operation.getDate(), TransactionType.CREDIT, true, false, o,
+                        operation.getAmount().subtract(operation.getAccount().getBalance()));
+                transaction.setCreationDate(Instant.now());
+                Transaction T2 = transactionService.save(transaction
                         );
                 transactions.add(T1);
                 transactions.add(T2);
