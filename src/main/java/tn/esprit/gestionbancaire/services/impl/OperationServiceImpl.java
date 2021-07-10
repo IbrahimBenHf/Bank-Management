@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import tn.esprit.gestionbancaire.enums.OperationStatus;
+import tn.esprit.gestionbancaire.enums.OperationSubType;
 import tn.esprit.gestionbancaire.enums.OperationType;
 import tn.esprit.gestionbancaire.enums.TransactionType;
 import tn.esprit.gestionbancaire.exception.EntityNotFoundException;
@@ -20,9 +21,7 @@ import tn.esprit.gestionbancaire.services.ITransactionService;
 import tn.esprit.gestionbancaire.validator.OperationValidator;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,7 +32,7 @@ public class OperationServiceImpl implements IOperationService {
     ITransactionService transactionService;
 
     @Override
-    public Operation save(Operation operation) {
+    public Operation save(Operation operation, BigDecimal v, boolean b, OperationType retrieve, OperationSubType regluement_Credit, OperationStatus toBeExecuted) {
         List<String> errors = OperationValidator.validate(operation);
         if (!errors.isEmpty()) {
             log.error("Operation is not valid {}", operation);
@@ -60,6 +59,7 @@ public class OperationServiceImpl implements IOperationService {
                 operation.setTransactions(transactions);
             }
         }
+        operation.setOperationStatus(OperationStatus.EXECUTED);
         return operationRepository.save(operation);
     }
 
@@ -110,7 +110,7 @@ public class OperationServiceImpl implements IOperationService {
         Collection<Operation> operations = getAllOperationByClient(accountNumber);
         return operations.stream().filter(x -> x.getOperationStatus().equals(operationStatus)).collect(Collectors.toList());
     }
-    // TODO REVERT This
+
     @Override
     public Operation revertOperation(Integer idOperation) {
         Operation operation = this.findOperationById(idOperation);
@@ -156,5 +156,12 @@ public class OperationServiceImpl implements IOperationService {
                     ErrorCodes.CREDIT_NON_MODIFIABLE);
         }
 
+    }
+
+    public void processCreditBill(Map<Integer,BigDecimal> map ){
+        Date calendar = new Date(System.currentTimeMillis());
+        map.forEach((k,v) ->this.save(new Operation(calendar.getMonth()+k),
+                v,true,OperationType.RETRIEVE, OperationSubType.Regluement_Credit,OperationStatus.TO_BE_EXECUTED)
+        );
     }
 }

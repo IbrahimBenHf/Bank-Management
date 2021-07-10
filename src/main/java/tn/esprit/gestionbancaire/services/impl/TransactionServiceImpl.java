@@ -10,7 +10,6 @@ import tn.esprit.gestionbancaire.exception.InvalidEntityException;
 import tn.esprit.gestionbancaire.exception.InvalidOperationException;
 import tn.esprit.gestionbancaire.model.Operation;
 import tn.esprit.gestionbancaire.model.Transaction;
-import tn.esprit.gestionbancaire.repository.ClientRepository;
 import tn.esprit.gestionbancaire.repository.TransactionRepository;
 import tn.esprit.gestionbancaire.services.*;
 import tn.esprit.gestionbancaire.validator.TransactionValidator;
@@ -41,7 +40,7 @@ public class TransactionServiceImpl implements ITransactionService {
     }
 
     @Override
-    public Transaction getTransactionById(Integer id) {
+    public Transaction findTransactionById(Integer id) {
         return transactionRepository.findById(id).orElseThrow(() ->
                 new EntityNotFoundException(
                         "There is no Transaction found with ID = " + id,
@@ -57,6 +56,11 @@ public class TransactionServiceImpl implements ITransactionService {
 
     @Override
     public List<Transaction> getTransactionByOperation(long idOperation, Boolean isNegative) {
+        return transactionRepository.findAll().stream().filter(x -> x.getOperation().getId() == idOperation).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Transaction> getTransactionByOperation(long idOperation) {
         return transactionRepository.findAll().stream().filter(x -> x.getOperation().getId() == idOperation).collect(Collectors.toList());
     }
 
@@ -104,7 +108,7 @@ public class TransactionServiceImpl implements ITransactionService {
     }
 
     @Override
-    public List<Transaction> getMonthlyTransactionsByClient(Date date) {
+    public List<Transaction> getMonthlyTransactionsByClient(Integer id,Date date) {
         return null;
     }
 
@@ -112,7 +116,7 @@ public class TransactionServiceImpl implements ITransactionService {
     @Override
     public Transaction revertTransaction(Integer id) {
         checkIdTransaction(id);
-        Transaction t = this.getTransactionById(id);
+        Transaction t = this.findTransactionById(id);
         t.setIsRevertedTransaction(true);
         return t;
 

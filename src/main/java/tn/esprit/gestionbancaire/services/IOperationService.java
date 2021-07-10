@@ -1,13 +1,16 @@
 package tn.esprit.gestionbancaire.services;
 
 import tn.esprit.gestionbancaire.enums.OperationStatus;
+import tn.esprit.gestionbancaire.enums.OperationSubType;
+import tn.esprit.gestionbancaire.enums.OperationType;
 import tn.esprit.gestionbancaire.model.Operation;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface IOperationService {
 
-    Operation save(Operation operation);
+    Operation save(Operation operation, BigDecimal v, boolean b, OperationType retrieve, OperationSubType regluement_Credit, OperationStatus toBeExecuted);
 
     Operation findOperationById(Integer id);
 
