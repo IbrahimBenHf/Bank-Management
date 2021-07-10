@@ -14,8 +14,10 @@ import tn.esprit.gestionbancaire.model.AdministrativeDocument;
 import tn.esprit.gestionbancaire.model.Credit;
 import tn.esprit.gestionbancaire.enums.CreditStatus;
 import tn.esprit.gestionbancaire.model.CreditTemplate;
+import tn.esprit.gestionbancaire.model.User;
 import tn.esprit.gestionbancaire.repository.CreditRepository;
 import tn.esprit.gestionbancaire.services.*;
+import tn.esprit.gestionbancaire.utils.Utility;
 import tn.esprit.gestionbancaire.validator.CreditValidator;
 
 import java.time.Instant;
@@ -32,6 +34,7 @@ public class CreditServiceImpl implements CreditService {
     private CreditSimulateurService creditSimulateurService;
     private MailService mailService;
     private CreditTemplateService creditTemplateService;
+
     @Autowired
     public CreditServiceImpl(CreditRepository creditRepository,
                              @Lazy CreditSimulateurService creditSimulateurService,
@@ -41,6 +44,7 @@ public class CreditServiceImpl implements CreditService {
         this.creditSimulateurService = creditSimulateurService;
         this.mailService = mailService;
         this.creditTemplateService = creditTemplateService;
+
     }
 
 
@@ -55,6 +59,8 @@ public class CreditServiceImpl implements CreditService {
         //if(credit.getCreditTemplate().getId() == 2){
         //  credit.setAmount(creditSimulateurService.vehicleCredit(credit.getAmount(),credit.getVehicleFiscalPower(),credit.getSelfFinancing(),credit.getRepaymentPeriod()).entrySet().stream().mapToDouble(e->e.getValue()).sum());
         //}
+        User currentUser = Utility.getCurrenUser().getUser();
+        credit.setUser(currentUser);
         credit.setCreationDate(Instant.now());
         credit.setLastModifiedDate(Instant.now());
         credit.setCreditStatus(CreditStatus.OPEN);
@@ -64,7 +70,7 @@ public class CreditServiceImpl implements CreditService {
 
     @Override
     public Credit updateCreditStatus(Integer idCredit, CreditStatus creditStatus) {
-         
+        isAdmin();
         checkIdCredit(idCredit);
         if (!StringUtils.hasLength(String.valueOf(creditStatus))) {
             log.error("Credit status is NULL");
@@ -88,7 +94,6 @@ public class CreditServiceImpl implements CreditService {
             }
             log.info(""+ similation);
             //call operation service
-            //send email to client
             credit.setCreditStatus(creditStatus);
             credit.setArchived(true);
             mailService.creditNotify(credit,creditStatus);
@@ -137,6 +142,14 @@ public class CreditServiceImpl implements CreditService {
             log.error("Credit ID is null");
             return null;
         }
+        Optional<Credit> credit = creditRepository.findById(id);
+        if(credit.isPresent()){
+            checkAuthorization(credit.get().getUser());
+//            if ((credit.get().getUser() != currentUser) || !currentUser.getRoles().equals("admin") ){
+//                throw new InvalidOperationException("UNAUTHORIZED USER MUST BE ADMIN OR CREDIT OWNER",
+//                        ErrorCodes.UNAUTHORIZED);
+//            }
+        }
         return creditRepository.findById(id).orElseThrow(() ->
                 new EntityNotFoundException(
                         "There is no credit found with ID = " + id,
@@ -147,23 +160,30 @@ public class CreditServiceImpl implements CreditService {
 
     @Override
     public List<Credit> findAll() {
+        isAdmin();
         return creditRepository.findAll().stream()
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<Credit> findAllByUser(Integer id) {
+        List<Credit> credit = creditRepository.findAllByUserId(id);
+        if(credit.size()!=0) {
+            checkAuthorization(credit.get(0).getUser());
+        }
         return creditRepository.findAllByUserId(id);
     }
 
     @Override
     public List<Credit> findAllNotArchived(Boolean archived) {
+        isAdmin();
         return creditRepository.findAllByArchived(archived).stream()
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<Credit> findAllByCreditStatus(CreditStatus creditStatus) {
+        isAdmin();
         return creditRepository.findAllByCreditStatus(creditStatus);
     }
 
@@ -175,6 +195,7 @@ public class CreditServiceImpl implements CreditService {
             log.error("Credit ID is null");
             return;
         }
+
         Optional<Credit> credit = creditRepository.findById(id);
 
             if (credit.isPresent() && !credit.get().isArchived()){
@@ -200,6 +221,7 @@ public class CreditServiceImpl implements CreditService {
 
     @Override
     public List<String> addNote(Integer id,String note) {
+        isAdmin();
         checkIdCredit(id);
         Credit credit = creditRepository.getById(id);
         List<String> notes = credit.getNotes();
@@ -211,11 +233,13 @@ public class CreditServiceImpl implements CreditService {
 
     @Override
     public long countCreditByCreditStatus(CreditStatus status) {
+        isAdmin();
         return creditRepository.countCreditByCreditStatus(status);
     }
 
     @Override
     public List<Credit> autoValidate() {
+        isAdmin();
         //list of updated credit
         List<Credit> updated = new ArrayList<>();
         //list of opened credit
@@ -284,6 +308,7 @@ public class CreditServiceImpl implements CreditService {
 
     @Override
     public Map<String, Integer> mostOpenedCreditByType() {
+        isAdmin();
         Map<String, Integer> map = new LinkedHashMap<>();
         Integer vehicleCredit = creditRepository.countCreditByCreditTemplateTitle("Vehicle");
         Integer prsonalCredit = creditRepository.countCreditByCreditTemplateTitle("Personal");
@@ -313,5 +338,20 @@ public class CreditServiceImpl implements CreditService {
             throw new InvalidOperationException("Is not allowed to change Credit status when he's done", ErrorCodes.CREDIT_NON_MODIFIABLE);
         }
         return credit;
+    }
+    private void isAdmin() {
+        User currentUser = Utility.getCurrenUser().getUser();
+        if(!currentUser.getRoles().equals("admin")) {
+            throw new InvalidOperationException("UNAUTHORIZED USER MUST BE ADMIN",
+                    ErrorCodes.UNAUTHORIZED);
+            }
+    }
+    private void checkAuthorization(User user){
+        User currentUser = Utility.getCurrenUser().getUser();
+        if ((!user.getId().equals(currentUser.getId())) && !currentUser.getRoles().equals("admin") ){
+                throw new InvalidOperationException("UNAUTHORIZED USER MUST BE ADMIN OR CREDIT OWNER",
+                        ErrorCodes.UNAUTHORIZED);
+            }
+
     }
 }

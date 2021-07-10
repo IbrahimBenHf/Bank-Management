@@ -46,13 +46,14 @@ public class Client implements Serializable {
 
     User user;
 	public Client(String nID, String firstName, String lastName, Date birthDate, String job, boolean validated,
-			Sexe sexe, CivilState civilState) {
+			Sexe sexe, CivilState civilState,String email) {
 		super();
 		this.nID = nID;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.birthDate = birthDate;
 		this.job = job;
+		this.email = email;
 		this.validated = validated;
 		this.sexe = sexe;
 		this.civilState = civilState;

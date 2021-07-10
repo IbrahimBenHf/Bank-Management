@@ -46,7 +46,7 @@ public class GestionBancaireApplication {
 		{
 			Calendar cal = Calendar.getInstance();
 			cal.set(1995, 01, 01);
-			Client client=  new Client("1253",role,role,cal.getTime(),"docteur",true,Sexe.H,CivilState.Maried);
+			Client client=  new Client("1253",role,role,cal.getTime(),"docteur",true,Sexe.H,CivilState.Maried,role+"@gmail.com");
 			clientService.save(client);
 			User newUser = new User(role,role,true,client,role);
 			newUser.setCreationDate(Instant.now());

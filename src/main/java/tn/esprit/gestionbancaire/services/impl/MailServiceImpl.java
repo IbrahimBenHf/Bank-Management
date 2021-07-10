@@ -73,8 +73,8 @@ public class MailServiceImpl implements MailService {
         // Create an email instance
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setFrom("NoReply@SantanderBank.com");
-        //mailMessage.setTo(credit.getUser().getEmail);
-        mailMessage.setTo("customer@gmail.com");
+        mailMessage.setTo(credit.getUser().getClient().getEmail());
+        //mailMessage.setTo("customer@gmail.com");
         mailMessage.setSubject("Update on your Credit Request");
         if (creditStatus == null){
             mailMessage.setText(MailTemplates.creditRequestCreated(credit));

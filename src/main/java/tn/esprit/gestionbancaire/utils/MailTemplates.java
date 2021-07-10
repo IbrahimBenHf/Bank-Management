@@ -30,7 +30,7 @@ public interface MailTemplates {
                 + "\nThank you for your trust.";
     }
     static String creditStatusUpdatedTemplate(Credit credit, CreditStatus creditStatus){
-        return "Hello "+credit.getCreditTemplate().getTitle() +" \n" +
+        return "Hello "+ credit.getUser().getUserName() +" \n" +
                 " \n" +
                 "Your credit request status has been updated to "+ creditStatus.toString() +"\n" +
                 " \n" +
@@ -38,7 +38,7 @@ public interface MailTemplates {
     }
 
     static String creditRequestCreated(Credit credit){
-        return "Hello "+credit.getCreditTemplate().getTitle() +" \n" +
+        return "Hello " + credit.getUser().getUserName() +" \n" +
                 " \n" +
                 "Your credit request has been created \n" +
                 " \n" +
