@@ -33,7 +33,7 @@ public class BatchController  implements BatchApi {
 
 
     @Override
-    @Scheduled(cron = "00 20 28 */1 *")
+    @Scheduled(cron = "00 00 20 28 */1 *")
     public Map<AccountType, Integer> autoSubtractCardFees(){
         return cardService.subtractCardFees();
     }

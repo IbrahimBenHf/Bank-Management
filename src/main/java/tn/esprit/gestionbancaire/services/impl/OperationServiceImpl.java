@@ -48,26 +48,34 @@ public class OperationServiceImpl implements IOperationService {
         operation.setAccount(accountService.findByAccountNumber(x));
         Collection<Transaction> transactions = new ArrayList<>();
         if(operation.getOperationtype().equals(OperationType.PAYMENT) || operation.getOperationtype().equals(OperationType.RETRIEVE)){
-            if(operation.getAmount().compareTo(operation.getAccount().getBalance())>0){
-                Operation o = operationRepository.save(operation);
-              Transaction T1 = new Transaction(operation.getDate(), TransactionType.CREDIT,false,false,o, operation.getAccount().getBalance());
-              T1.setCreationDate(Instant.now());
-                Transaction transaction = new Transaction(operation.getDate(), TransactionType.CREDIT, true, false, o,
-                        operation.getAmount().subtract(operation.getAccount().getBalance()));
-                transaction.setCreationDate(Instant.now());
-                Transaction T2 = transactionService.save(transaction
-                        );
-                transactions.add(T1);
-                transactions.add(T2);
-                operation.setTransactions(transactions);
+            if(!operation.getOperationSubType().equals(OperationSubType.Regluement_Credit)){
+                if(operation.getAmount().compareTo(operation.getAccount().getBalance())>0){
+                    Operation o = operationRepository.save(operation);
+                    Transaction T1 = new Transaction(operation.getDate(), TransactionType.CREDIT,false,false,o, operation.getAccount().getBalance());
+                    T1.setCreationDate(Instant.now());
+                    Transaction transaction = new Transaction(operation.getDate(), TransactionType.CREDIT, true, false, o,
+                            operation.getAmount().subtract(operation.getAccount().getBalance()));
+                    transaction.setCreationDate(Instant.now());
+                    Transaction T2 = transactionService.save(transaction
+                    );
+                    transactions.add(T1);
+                    transactions.add(T2);
+                    operation.setTransactions(transactions);
 
-        }else{
+                }else{
+                    Operation o = operationRepository.save(operation);
+                    Transaction t1  =transactionService.save(new Transaction(operation.getDate(), TransactionType.CREDIT,false,false,o,operation.getAmount()));
+                    operation.setTransactions(transactions);
+                    transactions.add(t1);
+
+                }}else{
                 Operation o = operationRepository.save(operation);
                 Transaction t1  =transactionService.save(new Transaction(operation.getDate(), TransactionType.CREDIT,false,false,o,operation.getAmount()));
                 operation.setTransactions(transactions);
                 transactions.add(t1);
 
             }
+
         }else{
             Operation o = operationRepository.save(operation);
             Transaction t1 = transactionService.save(new Transaction(operation.getDate(), TransactionType.DEBIT,false,false,o, operation.getAmount()));
