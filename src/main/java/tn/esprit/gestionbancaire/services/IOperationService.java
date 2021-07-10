@@ -11,6 +11,8 @@ public interface IOperationService {
 
     Operation findOperationById(Integer id);
 
+    List<Operation> findOperationByAccount(long IdAccount);
+
     Operation updateOperationStatus(Integer idOperation, OperationStatus operationStatus);
 
     List<Operation> getArchivedOperation(boolean inArchived);
@@ -19,5 +21,6 @@ public interface IOperationService {
 
     List<Operation> getAllOperationByClientAndStatus(long accountNumber, OperationStatus operationStatus);
 
-    void revertOperation(Operation operation, Boolean isNegativeTx, boolean isDebit);
+    Operation revertOperation(Integer idOperation);
+    // map (key value ) ==> create bills
 }

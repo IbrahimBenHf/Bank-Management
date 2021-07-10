@@ -45,9 +45,9 @@ public class OperationController implements OperationAPI {
     public List<Operation> getAllOperationByClientAndStatus(Integer id, OperationStatus operationStatus) {
         return operationService.getAllOperationByClientAndStatus(id,operationStatus);
     }
-    // TODO Tomorrow
+
     @Override
     public ResponseEntity<Operation> revert(Integer idOperation) {
-        return null;
+        return ResponseEntity.ok(operationService.revertOperation(idOperation));
     }
 }
