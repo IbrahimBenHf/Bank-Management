@@ -19,8 +19,8 @@ public interface AccountRequestApi {
     @PostMapping(APP_ROOT + "/account_request/request/{idTemplate}")
     @ApiOperation(value = "", notes = "", response = AccountRequest.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Credit modified "),
-            @ApiResponse(code = 400, message = "Credit is invalid")
+            @ApiResponse(code = 200, message = "Request created "),
+            @ApiResponse(code = 400, message = "Request is invalid")
     })
     ResponseEntity<Object> saveForNewClient(@RequestBody AccountRequest accountRequest,
                                         @PathVariable("idTemplate") long idTemplate);

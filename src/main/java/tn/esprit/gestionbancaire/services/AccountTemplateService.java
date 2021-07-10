@@ -4,6 +4,7 @@ import tn.esprit.gestionbancaire.exception.InvalidEntityException;
 import tn.esprit.gestionbancaire.model.AccountTemplate;
 
 import java.util.List;
+import java.util.Map;
 
 public interface AccountTemplateService {
 
@@ -16,4 +17,6 @@ public interface AccountTemplateService {
     AccountTemplate update(AccountTemplate accountTemplate);
 
     void delete(long id);
+
+    Map<String, Integer> accountsPerTemplate();
 }

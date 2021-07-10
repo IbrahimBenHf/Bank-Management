@@ -4,6 +4,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.Entity;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data
@@ -15,8 +17,14 @@ public class CardTemplate extends Product {
 
     private boolean onlinePurchase;
 
-    private boolean otherBankWithdraw;
+    private boolean otherATMWithdraw;
 
     private boolean forBusiness;
+
+    private float cardFees;
+
+    public static List<String> getNullableAttributes(){
+        return new ArrayList<>();
+    }
 
 }

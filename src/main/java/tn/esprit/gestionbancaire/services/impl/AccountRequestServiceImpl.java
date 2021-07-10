@@ -2,6 +2,7 @@ package tn.esprit.gestionbancaire.services.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -29,7 +30,7 @@ public class AccountRequestServiceImpl implements AccountRequestService {
 
     @Autowired
     public AccountRequestServiceImpl(AccountRequestRepository accountRequestRepository,
-                                     ClientRepository clientRepository, JavaMailSender javaMailSender) {
+                                     ClientRepository clientRepository, @Qualifier("getJavaMailSender") JavaMailSender javaMailSender) {
         this.accountRequestRepository = accountRequestRepository;
         this.clientRepository = clientRepository;
         this.javaMailSender = javaMailSender;

@@ -11,4 +11,5 @@ public interface SavingsAccountRepository extends JpaRepository<SavingsAccount, 
 
     Optional<Account> findByAccountNumber(String accountNumber);
     Account findByClient(Client client);
+    int countSavingsAccountByAccountTemplate_Id(long id);
 }

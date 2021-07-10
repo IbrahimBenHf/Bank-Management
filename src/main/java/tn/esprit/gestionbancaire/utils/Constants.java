@@ -24,6 +24,11 @@ public interface Constants {
 
   String ACCOUNT_REQUEST_DECLINED = "Account creation request declined";
 
+  String CARD_REQUEST_ACCEPTED = "Card request accepted";
+
+  String CARD_REQUEST_DECLINED = "Card creation request declined";
+
+
   String MY_EAMIL = "phoenix.banking.2021@gmail.com";
 
   String MY_PASSWORD = "phoenix2021";

@@ -1,6 +1,15 @@
 package tn.esprit.gestionbancaire.enums;
 
-public enum CivilState {
+import com.fasterxml.jackson.annotation.JsonValue;
+
+import java.io.Serializable;
+
+public enum CivilState implements Serializable {
 	Maried,
-	Single
+	Single;
+
+	@JsonValue
+	public String getCState() {
+		return this.name();
+	}
 }
