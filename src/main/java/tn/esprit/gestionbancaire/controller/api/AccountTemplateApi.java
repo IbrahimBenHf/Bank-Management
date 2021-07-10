@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import tn.esprit.gestionbancaire.model.AccountTemplate;
 
 import java.util.List;
+import java.util.Map;
 
 import static tn.esprit.gestionbancaire.utils.Constants.APP_ROOT;
 
@@ -46,4 +47,12 @@ public interface AccountTemplateApi {
             @ApiResponse(code = 400, message = "AccountTemplate not found")
     })
     ResponseEntity<Object> findAccountTemplate(@PathVariable("idAccountTemplate") long idAccountTemplate);
+
+    @GetMapping(APP_ROOT + "/account_template/stats/account_per_template")
+    @ApiOperation(value = "acc", notes = "aaa", responseContainer = "Map<String, Integer>")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "AccountTemplate retrieved"),
+            @ApiResponse(code = 400, message = "AccountTemplate not found")
+    })
+    Map<String, Integer> getAccountsPerTemplate();
 }

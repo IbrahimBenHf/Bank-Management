@@ -1,5 +1,7 @@
 package tn.esprit.gestionbancaire.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,6 +17,8 @@ public class Card implements Serializable {
 
     private static final long serialVersionUID = -4001423874330476267L;
 
+    private String cardNumber;
+
     private boolean isBlocked;
 
     //This should be reset to 0 every week
@@ -29,6 +33,7 @@ public class Card implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "Account_Id")
+    @JsonManagedReference
     private Account account;
 
 }

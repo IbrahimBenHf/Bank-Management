@@ -11,4 +11,5 @@ public interface CurrentAccountRepository extends JpaRepository<CurrentAccount, 
 
     Optional<Account> findByAccountNumber(String accountNumber);
     Account findByClient(Client client);
+    int countCurrentAccountByAccountTemplate_Id(long id);
 }
