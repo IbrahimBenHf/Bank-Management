@@ -38,6 +38,7 @@ public class TransactionServiceImpl implements ITransactionService {
             throw new InvalidEntityException("Operation is not valid", ErrorCodes.OPERATION_NOT_VALID, errors);
         }
         transaction.setCreationDate(Instant.now());
+        transaction.setTransactionType(TransactionType.DEBIT);
         return transactionRepository.save(transaction);
     }
 
