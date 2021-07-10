@@ -49,6 +49,12 @@ public interface ReclamationAPI {
     })
     void deleteReclamation(@PathVariable("idReclamation") Integer idReclamation);
 
+    @GetMapping(value = APP_ROOT + "/Reclamations/all/{status}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Get all Reclamations", notes = "This methode get all Reclamation ", responseContainer = "List<Reclamation>")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "List of Reclamations / Void list")
+    })
+    List<Reclamation> findAllByStatus(@PathVariable("status") ReclamationStatus reclamationStatus);
 
     @GetMapping(value = APP_ROOT + "/Reclamations/all", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Get all Reclamations", notes = "This methode get all Reclamation ", responseContainer = "List<Reclamation>")
@@ -56,5 +62,11 @@ public interface ReclamationAPI {
             @ApiResponse(code = 200, message = "List of Reclamations / Void list")
     })
     List<Reclamation> findAll();
+
+    @PostMapping(value = APP_ROOT + "/Reclamations/stats")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "List of Reclamations / Void list")
+    })
+    void getStats();
 
 }
