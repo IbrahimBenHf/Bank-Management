@@ -7,12 +7,14 @@ import tn.esprit.gestionbancaire.model.Operation;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 public interface IOperationService {
 
     Operation save(Operation operation, String x);
 
     Operation findOperationById(Integer id);
+    public void processCreditBill(Map<Integer,Double> map );
 
     List<Operation> findOperationByAccount(long IdAccount);
 
